@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { MOCK_REPORTS } from '@/features/reports/data/mock-reports'
 import {
   ArrowLeft,
   Camera,
@@ -122,31 +123,89 @@ const PHOTO_TABS: { key: PhotoTab; label: string }[] = [
   { key: 'after', label: 'Despues' },
 ]
 
-const PHOTO_DATA: Record<PhotoTab, { main: string; thumbs: string[] }> = {
-  before: {
-    main: '/images/phases/before-1.jpg',
-    thumbs: [
-      '/images/phases/before-1.jpg',
-      '/images/reports/pothole-1.jpg',
-      '/images/reports/crack-1.jpg',
-    ],
+// Phase photos mapped by damage type code — each type has unique before/during/after images
+const PHASE_PHOTOS: Record<string, Record<PhotoTab, { main: string; thumbs: string[] }>> = {
+  pothole: {
+    before: { main: '/images/reports/pothole-1.jpg', thumbs: ['/images/reports/pothole-1.jpg', '/images/reports/pothole-2.jpg'] },
+    during: { main: '/images/phases/during-1.jpg', thumbs: ['/images/phases/during-1.jpg', '/images/hero/crew-working.jpg'] },
+    after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg'] },
   },
-  during: {
-    main: '/images/phases/during-1.jpg',
-    thumbs: [
-      '/images/phases/during-1.jpg',
-      '/images/reports/road-damage-1.jpg',
-      '/images/reports/sidewalk-1.jpg',
-    ],
+  crack: {
+    before: { main: '/images/reports/crack-1.jpg', thumbs: ['/images/reports/crack-1.jpg', '/images/reports/road-damage-1.jpg'] },
+    during: { main: '/images/hero/crew-working.jpg', thumbs: ['/images/hero/crew-working.jpg', '/images/phases/during-1.jpg'] },
+    after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg', '/images/hero/hero-road.jpg'] },
   },
-  after: {
-    main: '/images/phases/after-1.jpg',
-    thumbs: [
-      '/images/phases/after-1.jpg',
-      '/images/reports/pothole-2.jpg',
-      '/images/reports/marking-1.jpg',
-    ],
+  alligator_crack: {
+    before: { main: '/images/reports/crack-1.jpg', thumbs: ['/images/reports/crack-1.jpg', '/images/reports/road-damage-1.jpg'] },
+    during: { main: '/images/phases/during-1.jpg', thumbs: ['/images/phases/during-1.jpg', '/images/hero/crew-working.jpg'] },
+    after:  { main: '/images/hero/hero-road.jpg',  thumbs: ['/images/hero/hero-road.jpg', '/images/phases/after-1.jpg'] },
   },
+  open_manhole: {
+    before: { main: '/images/reports/drain-1.jpg', thumbs: ['/images/reports/drain-1.jpg'] },
+    during: { main: '/images/phases/during-1.jpg', thumbs: ['/images/phases/during-1.jpg', '/images/hero/crew-working.jpg'] },
+    after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg'] },
+  },
+  broken_manhole: {
+    before: { main: '/images/reports/drain-1.jpg', thumbs: ['/images/reports/drain-1.jpg'] },
+    during: { main: '/images/hero/crew-working.jpg', thumbs: ['/images/hero/crew-working.jpg', '/images/phases/during-1.jpg'] },
+    after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg'] },
+  },
+  missing_sign: {
+    before: { main: '/images/reports/signage-1.jpg', thumbs: ['/images/reports/signage-1.jpg'] },
+    during: { main: '/images/phases/during-1.jpg', thumbs: ['/images/phases/during-1.jpg', '/images/hero/crew-working.jpg'] },
+    after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg', '/images/hero/hero-road.jpg'] },
+  },
+  flooding: {
+    before: { main: '/images/reports/flooding-1.jpg', thumbs: ['/images/reports/flooding-1.jpg'] },
+    during: { main: '/images/hero/crew-working.jpg', thumbs: ['/images/hero/crew-working.jpg', '/images/phases/during-1.jpg'] },
+    after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg', '/images/hero/hero-road.jpg'] },
+  },
+  subsidence: {
+    before: { main: '/images/reports/road-damage-1.jpg', thumbs: ['/images/reports/road-damage-1.jpg', '/images/reports/pothole-1.jpg'] },
+    during: { main: '/images/phases/during-1.jpg', thumbs: ['/images/phases/during-1.jpg', '/images/hero/crew-working.jpg'] },
+    after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg'] },
+  },
+  damaged_sidewalk: {
+    before: { main: '/images/reports/sidewalk-1.jpg', thumbs: ['/images/reports/sidewalk-1.jpg'] },
+    during: { main: '/images/phases/during-1.jpg', thumbs: ['/images/phases/during-1.jpg', '/images/hero/crew-working.jpg'] },
+    after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg', '/images/hero/hero-road.jpg'] },
+  },
+  faded_marking: {
+    before: { main: '/images/reports/marking-1.jpg', thumbs: ['/images/reports/marking-1.jpg'] },
+    during: { main: '/images/hero/crew-working.jpg', thumbs: ['/images/hero/crew-working.jpg', '/images/phases/during-1.jpg'] },
+    after:  { main: '/images/hero/hero-road.jpg',  thumbs: ['/images/hero/hero-road.jpg', '/images/phases/after-1.jpg'] },
+  },
+  street_light: {
+    before: { main: '/images/reports/lighting-1.jpg', thumbs: ['/images/reports/lighting-1.jpg'] },
+    during: { main: '/images/phases/during-1.jpg', thumbs: ['/images/phases/during-1.jpg', '/images/hero/crew-working.jpg'] },
+    after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg'] },
+  },
+  debris: {
+    before: { main: '/images/reports/road-damage-1.jpg', thumbs: ['/images/reports/road-damage-1.jpg'] },
+    during: { main: '/images/hero/crew-working.jpg', thumbs: ['/images/hero/crew-working.jpg', '/images/phases/during-1.jpg'] },
+    after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg', '/images/hero/hero-road.jpg'] },
+  },
+  tree_damage: {
+    before: { main: '/images/reports/road-damage-1.jpg', thumbs: ['/images/reports/road-damage-1.jpg'] },
+    during: { main: '/images/phases/during-1.jpg', thumbs: ['/images/phases/during-1.jpg', '/images/hero/crew-working.jpg'] },
+    after:  { main: '/images/hero/hero-road.jpg',  thumbs: ['/images/hero/hero-road.jpg', '/images/phases/after-1.jpg'] },
+  },
+  rutting: {
+    before: { main: '/images/reports/road-damage-1.jpg', thumbs: ['/images/reports/road-damage-1.jpg', '/images/reports/pothole-2.jpg'] },
+    during: { main: '/images/phases/during-1.jpg', thumbs: ['/images/phases/during-1.jpg', '/images/hero/crew-working.jpg'] },
+    after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg'] },
+  },
+}
+
+// Default fallback photos
+const DEFAULT_PHOTOS: Record<PhotoTab, { main: string; thumbs: string[] }> = {
+  before: { main: '/images/phases/before-1.jpg', thumbs: ['/images/phases/before-1.jpg'] },
+  during: { main: '/images/phases/during-1.jpg', thumbs: ['/images/phases/during-1.jpg', '/images/hero/crew-working.jpg'] },
+  after:  { main: '/images/phases/after-1.jpg',  thumbs: ['/images/phases/after-1.jpg', '/images/hero/hero-road.jpg'] },
+}
+
+function getPhotoData(damageCode: string): Record<PhotoTab, { main: string; thumbs: string[] }> {
+  return PHASE_PHOTOS[damageCode] || DEFAULT_PHOTOS
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -177,6 +236,11 @@ export default function ReportDetailPage() {
   const router = useRouter()
   const params = useParams()
   const reportId = params.id as string
+
+  // Find the report by ID to get damage type for unique photos
+  const currentReport = MOCK_REPORTS.find(r => r.id === reportId)
+  const damageCode = currentReport?.damage_type?.code || 'pothole'
+  const PHOTO_DATA = getPhotoData(damageCode)
 
   const [comment, setComment] = useState('')
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS)
@@ -443,14 +507,11 @@ export default function ReportDetailPage() {
             {/* Description */}
             <div className="bg-[#0F1A2E] rounded-2xl border border-white/10 p-5 shadow-sm">
               <h2 className="text-base font-bold text-white mb-1">
-                Bache profundo en Av. 27 de Febrero
+                {currentReport?.title || 'Reporte de dano vial'}
               </h2>
-              <p className="text-xs text-slate-400 mb-3">Via: Av. 27 de Febrero esq. Tiradentes</p>
+              <p className="text-xs text-slate-400 mb-3">Via: {currentReport?.address || 'Direccion no disponible'}</p>
               <p className="text-sm text-slate-300 leading-relaxed">
-                Bache de aproximadamente 60cm de diametro y 12cm de profundidad ubicado en el carril
-                derecho. La cavidad presenta bordes irregulares y acumulacion de agua en dias de
-                lluvia. Representa un riesgo moderado para motocicletas y vehiculos de transporte
-                publico que circulan por esa via frecuentemente.
+                {currentReport?.description || 'Descripcion no disponible.'}
               </p>
             </div>
 
@@ -521,35 +582,35 @@ export default function ReportDetailPage() {
               <h2 className="text-sm font-semibold text-slate-100 mb-3">Informacion</h2>
 
               <InfoRow icon={<CircleDot size={15} />} label="Tipo de dano">
-                Bache
+                {currentReport?.damage_type?.name || 'Bache'}
               </InfoRow>
 
               <InfoRow icon={<span className="w-3.5 h-3.5 rounded-full bg-orange-500 inline-block" />} label="Severidad">
                 <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium bg-orange-500/15 text-orange-400 border border-orange-500/20">
-                  Alta
+                  {currentReport?.severity === 'critical' ? 'Critica' : currentReport?.severity === 'high' ? 'Alta' : currentReport?.severity === 'medium' ? 'Media' : 'Baja'}
                 </span>
               </InfoRow>
 
               <InfoRow icon={<MapPin size={15} />} label="Zona">
-                Zona Norte
+                {currentReport?.zone_name || 'Zona Norte'}
               </InfoRow>
 
               <InfoRow icon={<MapPin size={15} />} label="Sector">
-                Villa Mella
+                {currentReport?.sector_name || 'N/A'}
               </InfoRow>
 
               <InfoRow icon={<MapPin size={15} />} label="Calle">
                 <span className="text-xs leading-relaxed">
-                  Av. 27 de Febrero esq. Tiradentes
+                  {currentReport?.address || 'Direccion no disponible'}
                 </span>
               </InfoRow>
 
               <InfoRow icon={<MapPin size={15} />} label="Coordenadas">
                 <div>
-                  <span className="font-mono text-xs block mb-2">18.4861, -69.9312</span>
+                  <span className="font-mono text-xs block mb-2">{currentReport?.latitude || 18.4861}, {currentReport?.longitude || -69.9312}</span>
                   <div className="flex gap-1.5">
                     <a
-                      href="https://www.google.com/maps?q=18.4861,-69.9312"
+                      href={`https://www.google.com/maps?q=${currentReport?.latitude || 18.4861},${currentReport?.longitude || -69.9312}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 px-2 py-1 bg-[#1B2B4B] hover:bg-white/10 rounded text-[10px] font-medium text-slate-200 transition-colors"
@@ -558,7 +619,7 @@ export default function ReportDetailPage() {
                       Google Maps
                     </a>
                     <a
-                      href="https://www.waze.com/ul?ll=18.4861,-69.9312&navigate=yes"
+                      href={`https://www.waze.com/ul?ll=${currentReport?.latitude || 18.4861},${currentReport?.longitude || -69.9312}&navigate=yes`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 px-2 py-1 bg-[#1B2B4B] hover:bg-white/10 rounded text-[10px] font-medium text-slate-200 transition-colors"
@@ -571,15 +632,15 @@ export default function ReportDetailPage() {
               </InfoRow>
 
               <InfoRow icon={<User size={15} />} label="Reportado por">
-                Carlos Martinez
+                {currentReport?.reported_by || 'N/A'}
               </InfoRow>
 
               <InfoRow icon={<Calendar size={15} />} label="Fecha">
-                <span className="text-xs">15 Feb 2026, 09:32 AM</span>
+                <span className="text-xs">{currentReport?.reported_at ? new Date(currentReport.reported_at).toLocaleDateString('es-DO', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'N/A'}</span>
               </InfoRow>
 
               <InfoRow icon={<Users size={15} />} label="Brigada">
-                <span className="text-green-400">{selectedBrigade}</span>
+                <span className="text-green-400">{currentReport?.brigade_name || selectedBrigade}</span>
               </InfoRow>
 
               <InfoRow icon={<Clock size={15} />} label="Tiempo transcurrido">
