@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { MOCK_REPORTS } from '@/features/reports/data/mock-reports'
 import {
@@ -19,8 +19,14 @@ import {
   ZoomIn,
   ExternalLink,
   ImagePlus,
+  AlertCircle,
+  PlayCircle,
+  Eye,
+  ThumbsUp,
+  X,
 } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
+import type { ReportStatus } from '@/shared/types'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -114,6 +120,32 @@ const MOCK_TIMELINE: TimelineEntry[] = [
 ]
 
 const BRIGADES = ['Brigada Alpha', 'Brigada Beta', 'Brigada Gamma', 'Brigada Delta']
+
+// Status workflow configuration
+const STATUS_OPTIONS: { value: ReportStatus; label: string; icon: typeof AlertCircle; color: string; hoverBg: string }[] = [
+  { value: 'submitted', label: 'Enviado', icon: AlertCircle, color: 'text-blue-400', hoverBg: 'hover:bg-blue-500/15' },
+  { value: 'in_review', label: 'En Revision', icon: Eye, color: 'text-yellow-400', hoverBg: 'hover:bg-yellow-500/15' },
+  { value: 'approved', label: 'Aprobado', icon: ThumbsUp, color: 'text-emerald-400', hoverBg: 'hover:bg-emerald-500/15' },
+  { value: 'in_progress', label: 'En Proceso', icon: PlayCircle, color: 'text-orange-400', hoverBg: 'hover:bg-orange-500/15' },
+  { value: 'completed', label: 'Completado', icon: CheckCircle2, color: 'text-green-400', hoverBg: 'hover:bg-green-500/15' },
+  { value: 'rejected', label: 'Rechazado', icon: XCircle, color: 'text-red-400', hoverBg: 'hover:bg-red-500/15' },
+]
+
+const STATUS_DISPLAY: Record<string, { label: string; dotColor: string; badgeClass: string }> = {
+  draft: { label: 'Borrador', dotColor: 'bg-gray-400', badgeClass: 'bg-gray-500/15 text-gray-400 border-gray-500/20' },
+  submitted: { label: 'Enviado', dotColor: 'bg-blue-500', badgeClass: 'bg-blue-500/15 text-blue-400 border-blue-500/20' },
+  in_review: { label: 'En Revision', dotColor: 'bg-yellow-500', badgeClass: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/20' },
+  approved: { label: 'Aprobado', dotColor: 'bg-emerald-500', badgeClass: 'bg-green-500/15 text-green-400 border-green-500/20' },
+  in_progress: { label: 'En Proceso', dotColor: 'bg-orange-500', badgeClass: 'bg-orange-500/15 text-orange-400 border-orange-500/20' },
+  completed: { label: 'Completado', dotColor: 'bg-green-500', badgeClass: 'bg-green-500/15 text-green-400 border-green-500/20' },
+  rejected: { label: 'Rechazado', dotColor: 'bg-red-500', badgeClass: 'bg-red-500/15 text-red-400 border-red-500/20' },
+}
+
+interface Toast {
+  id: string
+  message: string
+  type: 'success' | 'info' | 'warning'
+}
 
 type PhotoTab = 'before' | 'during' | 'after'
 
@@ -246,15 +278,72 @@ export default function ReportDetailPage() {
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS)
   const [brigadeDropdownOpen, setBrigadeDropdownOpen] = useState(false)
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false)
-  const [selectedBrigade, setSelectedBrigade] = useState('Brigada Alpha')
+  const [selectedBrigade, setSelectedBrigade] = useState(currentReport?.brigade_name || 'Sin asignar')
+  const [currentStatus, setCurrentStatus] = useState<ReportStatus>(currentReport?.status || 'submitted')
   const [activePhotoTab, setActivePhotoTab] = useState<PhotoTab>('before')
   const [activeThumbIndex, setActiveThumbIndex] = useState(0)
+  const [toasts, setToasts] = useState<Toast[]>([])
   const uploadInputRef = useRef<HTMLInputElement>(null)
   const [uploadedPhotos, setUploadedPhotos] = useState<Record<PhotoTab, string[]>>({
     before: [],
     during: [],
     after: [],
   })
+
+  const addToast = useCallback((message: string, type: Toast['type'] = 'success') => {
+    const id = String(Date.now())
+    setToasts(prev => [...prev, { id, message, type }])
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000)
+  }, [])
+
+  const removeToast = useCallback((id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id))
+  }, [])
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    function handleClick() {
+      setBrigadeDropdownOpen(false)
+      setStatusDropdownOpen(false)
+    }
+    if (brigadeDropdownOpen || statusDropdownOpen) {
+      const timer = setTimeout(() => document.addEventListener('click', handleClick), 0)
+      return () => { clearTimeout(timer); document.removeEventListener('click', handleClick) }
+    }
+  }, [brigadeDropdownOpen, statusDropdownOpen])
+
+  function handleAssignBrigade(brigade: string) {
+    setSelectedBrigade(brigade)
+    setBrigadeDropdownOpen(false)
+    addToast(`Brigada "${brigade}" asignada al reporte ${currentReport?.report_number || reportId}`, 'success')
+    // Add timeline entry
+    setTimeline(prev => [...prev, {
+      id: String(Date.now()),
+      label: `Brigada Asignada: ${brigade}`,
+      date: `${new Date().toLocaleDateString('es-DO', { month: 'short', day: 'numeric' })}, ${new Date().toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' })} - Admin`,
+      author: 'Admin',
+      dotColor: 'bg-blue-500',
+      lineColor: 'bg-white/10',
+    }])
+  }
+
+  function handleChangeStatus(newStatus: ReportStatus) {
+    const statusLabel = STATUS_DISPLAY[newStatus]?.label || newStatus
+    setCurrentStatus(newStatus)
+    setStatusDropdownOpen(false)
+    addToast(`Estado cambiado a "${statusLabel}"`, newStatus === 'rejected' ? 'warning' : 'success')
+    // Add timeline entry
+    setTimeline(prev => [...prev, {
+      id: String(Date.now()),
+      label: statusLabel,
+      date: `${new Date().toLocaleDateString('es-DO', { month: 'short', day: 'numeric' })}, ${new Date().toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' })} - Admin`,
+      author: 'Admin',
+      dotColor: STATUS_DISPLAY[newStatus]?.dotColor || 'bg-gray-500',
+      lineColor: 'bg-white/10',
+    }])
+  }
+
+  const [timeline, setTimeline] = useState<TimelineEntry[]>(MOCK_TIMELINE)
 
   function handleUploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files
@@ -265,21 +354,23 @@ export default function ReportDetailPage() {
       [activePhotoTab]: [...prev[activePhotoTab], ...newUrls].slice(0, 10),
     }))
     if (uploadInputRef.current) uploadInputRef.current.value = ''
+    addToast(`${files.length} foto(s) agregada(s) a "${PHOTO_TABS.find(t => t.key === activePhotoTab)?.label}"`, 'info')
   }
 
   function handleAddComment() {
     if (!comment.trim()) return
     const newComment: Comment = {
       id: String(Date.now()),
-      initials: 'TU',
-      name: 'Tu Nombre',
-      role: 'Supervisor',
-      roleColor: 'bg-indigo-500/15 text-indigo-400',
+      initials: 'AD',
+      name: 'Admin Demo',
+      role: 'Administrador',
+      roleColor: 'bg-amber-500/15 text-amber-400',
       date: 'Ahora',
       content: comment.trim(),
     }
     setComments((prev) => [...prev, newComment])
     setComment('')
+    addToast('Comentario agregado', 'info')
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -304,11 +395,14 @@ export default function ReportDetailPage() {
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="text-base font-bold text-white">
-                    Reporte DN-00000{reportId}
+                    Reporte {currentReport?.report_number || `DN-00000${reportId}`}
                   </h1>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-500/15 text-orange-400 border border-orange-500/20">
-                    <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                    En Proceso
+                  <span className={cn(
+                    'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-all',
+                    STATUS_DISPLAY[currentStatus]?.badgeClass || 'bg-orange-500/15 text-orange-400 border-orange-500/20'
+                  )}>
+                    <span className={cn('w-1.5 h-1.5 rounded-full', STATUS_DISPLAY[currentStatus]?.dotColor || 'bg-orange-500')} />
+                    {STATUS_DISPLAY[currentStatus]?.label || 'En Proceso'}
                   </span>
                 </div>
               </div>
@@ -319,22 +413,19 @@ export default function ReportDetailPage() {
               {/* Assign brigade */}
               <div className="relative">
                 <button
-                  onClick={() => setBrigadeDropdownOpen((p) => !p)}
+                  onClick={(e) => { e.stopPropagation(); setBrigadeDropdownOpen((p) => !p); setStatusDropdownOpen(false) }}
                   className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors"
                 >
                   <Users size={15} />
-                  Asignar Brigada
+                  {selectedBrigade === 'Sin asignar' ? 'Asignar Brigada' : selectedBrigade}
                   <ChevronDown size={14} />
                 </button>
                 {brigadeDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-1 w-48 bg-[#0F1A2E] border border-white/10 rounded-xl shadow-lg py-1 z-20">
+                  <div className="absolute right-0 top-full mt-1 w-48 bg-[#0F1A2E] border border-white/10 rounded-xl shadow-lg py-1 z-20" onClick={e => e.stopPropagation()}>
                     {BRIGADES.map((brigade) => (
                       <button
                         key={brigade}
-                        onClick={() => {
-                          setSelectedBrigade(brigade)
-                          setBrigadeDropdownOpen(false)
-                        }}
+                        onClick={() => handleAssignBrigade(brigade)}
                         className={cn(
                           'w-full text-left px-3 py-2 text-sm transition-colors',
                           brigade === selectedBrigade
@@ -352,28 +443,28 @@ export default function ReportDetailPage() {
               {/* Status change */}
               <div className="relative">
                 <button
-                  onClick={() => setStatusDropdownOpen((p) => !p)}
+                  onClick={(e) => { e.stopPropagation(); setStatusDropdownOpen((p) => !p); setBrigadeDropdownOpen(false) }}
                   className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1B2B4B] hover:bg-white/10 text-slate-200 text-sm font-medium transition-colors border border-white/10"
                 >
                   Cambiar Estado
                   <ChevronDown size={14} />
                 </button>
                 {statusDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-1 w-52 bg-[#0F1A2E] border border-white/10 rounded-xl shadow-lg py-1 z-20">
-                    <button
-                      onClick={() => setStatusDropdownOpen(false)}
-                      className="w-full text-left px-3 py-2.5 text-sm text-green-400 hover:bg-green-500/15 transition-colors flex items-center gap-2"
-                    >
-                      <CheckCircle2 size={15} />
-                      Marcar Completado
-                    </button>
-                    <button
-                      onClick={() => setStatusDropdownOpen(false)}
-                      className="w-full text-left px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/15 transition-colors flex items-center gap-2"
-                    >
-                      <XCircle size={15} />
-                      Rechazar Reporte
-                    </button>
+                  <div className="absolute right-0 top-full mt-1 w-56 bg-[#0F1A2E] border border-white/10 rounded-xl shadow-lg py-1 z-20" onClick={e => e.stopPropagation()}>
+                    <p className="px-3 py-1.5 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Cambiar estado a:</p>
+                    {STATUS_OPTIONS.filter(s => s.value !== currentStatus).map((status) => {
+                      const Icon = status.icon
+                      return (
+                        <button
+                          key={status.value}
+                          onClick={() => handleChangeStatus(status.value)}
+                          className={cn('w-full text-left px-3 py-2.5 text-sm transition-colors flex items-center gap-2', status.color, status.hoverBg)}
+                        >
+                          <Icon size={15} />
+                          {status.label}
+                        </button>
+                      )
+                    })}
                   </div>
                 )}
               </div>
@@ -653,8 +744,8 @@ export default function ReportDetailPage() {
               <h2 className="text-sm font-semibold text-slate-100 mb-4">Linea de Tiempo</h2>
 
               <ol className="relative" aria-label="Historial de estado">
-                {MOCK_TIMELINE.map((entry, idx) => {
-                  const isLast = idx === MOCK_TIMELINE.length - 1
+                {timeline.map((entry, idx) => {
+                  const isLast = idx === timeline.length - 1
                   return (
                     <li key={entry.id} className="flex gap-3 pb-4 last:pb-0">
                       {/* Dot + line */}
@@ -687,6 +778,31 @@ export default function ReportDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Toast notifications */}
+      {toasts.length > 0 && (
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2">
+          {toasts.map((toast) => (
+            <div
+              key={toast.id}
+              className={cn(
+                'flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl border backdrop-blur-sm animate-in slide-in-from-right-5 fade-in duration-300 min-w-[300px] max-w-[420px]',
+                toast.type === 'success' && 'bg-green-950/90 border-green-500/30 text-green-300',
+                toast.type === 'info' && 'bg-blue-950/90 border-blue-500/30 text-blue-300',
+                toast.type === 'warning' && 'bg-red-950/90 border-red-500/30 text-red-300',
+              )}
+            >
+              {toast.type === 'success' && <CheckCircle2 size={18} className="text-green-400 shrink-0" />}
+              {toast.type === 'info' && <AlertCircle size={18} className="text-blue-400 shrink-0" />}
+              {toast.type === 'warning' && <XCircle size={18} className="text-red-400 shrink-0" />}
+              <span className="text-sm font-medium flex-1">{toast.message}</span>
+              <button onClick={() => removeToast(toast.id)} className="shrink-0 hover:opacity-70 transition-opacity">
+                <X size={14} />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
