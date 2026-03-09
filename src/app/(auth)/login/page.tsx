@@ -82,7 +82,7 @@ export default function LoginPage() {
             </label>
             <Link
               href="/forgot-password"
-              className="text-xs text-green-400 transition-colors hover:text-green-300"
+              className="text-xs text-[#D4A017] transition-colors hover:text-[#B8890F]"
             >
               Olvidaste tu contrasena?
             </Link>
@@ -114,7 +114,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-500 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/25 disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-950"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6B35] to-[#F59E0B] py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-[#F59E0B]/25 disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] focus:ring-offset-2 focus:ring-offset-slate-950"
         >
           {isSubmitting ? (
             <>
@@ -139,7 +139,7 @@ export default function LoginPage() {
         Acceso por invitacion.{' '}
         <Link
           href="/signup"
-          className="font-medium text-green-400 transition-colors hover:text-green-300"
+          className="font-medium text-[#D4A017] transition-colors hover:text-[#B8890F]"
         >
           Tengo un codigo de invitacion
         </Link>
@@ -153,6 +153,6 @@ function inputClass(hasError: boolean) {
     'w-full rounded-xl border bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-600 backdrop-blur-sm transition-all duration-200 outline-none',
     hasError
       ? 'border-red-500/50 focus:border-red-400 focus:ring-2 focus:ring-red-400/20'
-      : 'border-white/10 focus:border-green-500/50 focus:ring-2 focus:ring-green-500/15 hover:border-white/20'
+      : 'border-white/10 focus:border-[#4A90D9]/50 focus:ring-2 focus:ring-[#4A90D9]/15 hover:border-white/20'
   )
 }

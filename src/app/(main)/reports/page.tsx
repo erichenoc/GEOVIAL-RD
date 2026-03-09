@@ -13,7 +13,6 @@ import {
   User,
   Users,
   ChevronRight,
-  FileWarning,
 } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { timeAgo } from '@/shared/lib/utils'
@@ -27,50 +26,50 @@ const STATUS_CONFIG: Record<ReportStatus, { label: string; dotColor: string; bad
   draft: {
     label: 'Borrador',
     dotColor: 'bg-gray-400',
-    badgeClass: 'bg-gray-100 text-gray-600 border-gray-200',
+    badgeClass: 'bg-gray-500/15 text-gray-400 border-gray-500/20',
   },
   submitted: {
     label: 'Enviado',
     dotColor: 'bg-blue-500',
-    badgeClass: 'bg-blue-50 text-blue-700 border-blue-200',
+    badgeClass: 'bg-blue-500/15 text-blue-400 border-blue-500/20',
   },
   in_review: {
     label: 'En Revisión',
     dotColor: 'bg-yellow-500',
-    badgeClass: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+    badgeClass: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/20',
   },
   approved: {
     label: 'Aprobado',
     dotColor: 'bg-emerald-500',
-    badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    badgeClass: 'bg-green-500/15 text-green-400 border-green-500/20',
   },
   in_progress: {
     label: 'En Progreso',
     dotColor: 'bg-orange-500',
-    badgeClass: 'bg-orange-50 text-orange-700 border-orange-200',
+    badgeClass: 'bg-orange-500/15 text-orange-400 border-orange-500/20',
   },
   completed: {
     label: 'Completado',
     dotColor: 'bg-green-500',
-    badgeClass: 'bg-green-50 text-green-700 border-green-200',
+    badgeClass: 'bg-green-500/15 text-green-400 border-green-500/20',
   },
   rejected: {
     label: 'Rechazado',
     dotColor: 'bg-red-500',
-    badgeClass: 'bg-red-50 text-red-700 border-red-200',
+    badgeClass: 'bg-red-500/15 text-red-400 border-red-500/20',
   },
   cancelled: {
     label: 'Cancelado',
     dotColor: 'bg-slate-400',
-    badgeClass: 'bg-slate-100 text-slate-600 border-slate-200',
+    badgeClass: 'bg-slate-500/15 text-slate-400 border-slate-500/20',
   },
 }
 
 const SEVERITY_CONFIG: Record<DamageSeverity, { label: string; badgeClass: string }> = {
-  low: { label: 'Baja', badgeClass: 'bg-green-50 text-green-700 border-green-200' },
-  medium: { label: 'Media', badgeClass: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
-  high: { label: 'Alta', badgeClass: 'bg-orange-50 text-orange-700 border-orange-200' },
-  critical: { label: 'Critica', badgeClass: 'bg-red-50 text-red-700 border-red-200' },
+  low: { label: 'Baja', badgeClass: 'bg-green-500/15 text-green-400 border-green-500/20' },
+  medium: { label: 'Media', badgeClass: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/20' },
+  high: { label: 'Alta', badgeClass: 'bg-orange-500/15 text-orange-400 border-orange-500/20' },
+  critical: { label: 'Critica', badgeClass: 'bg-red-500/15 text-red-400 border-red-500/20' },
 }
 
 const STATUS_FILTER_OPTIONS = [
@@ -134,7 +133,7 @@ function SeverityBadge({ severity }: { severity: DamageSeverity }) {
 function ReportCard({ report }: { report: MockReport }) {
   return (
     <Link href={`/reports/${report.id}`} className="block group">
-      <article className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200">
+      <article className="bg-[#0F1A2E] border border-white/10 rounded-2xl overflow-hidden shadow-sm hover:border-[#4A90D9]/20 hover:shadow-[0_8px_32px_rgba(11,26,48,0.3)] transition-all duration-200">
         <div className="flex">
           {/* Status bar */}
           <div
@@ -150,13 +149,16 @@ function ReportCard({ report }: { report: MockReport }) {
           {/* Photo thumbnail */}
           <div
             className={cn(
-              'hidden sm:block w-28 h-28 shrink-0 md:w-32 md:h-32',
+              'hidden sm:block w-28 h-28 shrink-0 md:w-32 md:h-32 overflow-hidden bg-white/10',
               report.photo_color
             )}
           >
-            <div className="w-full h-full flex items-center justify-center opacity-20">
-              <FileWarning size={32} className="text-white" />
-            </div>
+            <img
+              src={report.photo_url}
+              alt={`Foto del reporte ${report.report_number}`}
+              loading="lazy"
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {/* Content */}
@@ -164,15 +166,15 @@ function ReportCard({ report }: { report: MockReport }) {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-mono text-slate-400 shrink-0">
+                  <span className="text-xs font-mono text-[#4A90D9]/60 shrink-0">
                     {report.report_number}
                   </span>
                   <StatusBadge status={report.status} />
                 </div>
-                <h3 className="text-sm font-semibold text-slate-800 group-hover:text-green-700 transition-colors leading-snug line-clamp-1">
+                <h3 className="text-sm font-semibold text-slate-100 group-hover:text-[#4A90D9] transition-colors leading-snug line-clamp-1">
                   {report.title}
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">
+                <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">
                   {report.zone_name}{' '}
                   <ChevronRight size={10} className="inline" />
                   {' '}{report.sector_name}
@@ -180,32 +182,32 @@ function ReportCard({ report }: { report: MockReport }) {
               </div>
               <ChevronRight
                 size={16}
-                className="shrink-0 text-slate-300 group-hover:text-slate-500 transition-colors mt-0.5"
+                className="shrink-0 text-slate-500 group-hover:text-slate-400 transition-colors mt-0.5"
               />
             </div>
 
-            <p className="text-xs text-slate-500 mt-2 line-clamp-1 hidden md:block">
+            <p className="text-xs text-slate-400 mt-2 line-clamp-1 hidden md:block">
               {report.description}
             </p>
 
             <div className="flex flex-wrap items-center gap-2 mt-3">
-              <span className="text-xs text-slate-500 bg-slate-100 rounded px-2 py-0.5">
+              <span className="text-xs text-slate-400 bg-[#1B2B4B] rounded px-2 py-0.5">
                 {report.damage_type.name}
               </span>
               <SeverityBadge severity={report.severity} />
             </div>
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3">
-              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <div className="flex items-center gap-1.5 text-xs text-slate-500">
                 <User size={12} />
                 <span>{report.reported_by}</span>
               </div>
-              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <div className="flex items-center gap-1.5 text-xs text-slate-500">
                 <Clock size={12} />
                 <span>{timeAgo(report.reported_at)}</span>
               </div>
               {report.brigade_name && (
-                <div className="flex items-center gap-1.5 text-xs text-green-600">
+                <div className="flex items-center gap-1.5 text-xs text-[#4A90D9]">
                   <Users size={12} />
                   <span>{report.brigade_name}</span>
                 </div>
@@ -218,31 +220,31 @@ function ReportCard({ report }: { report: MockReport }) {
   )
 }
 
-function EmptyState({ hasFilters }: { hasFilters: boolean }) {
+function EmptyState({ hasFilters, onClearFilters }: { hasFilters: boolean; onClearFilters: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center px-4">
-      <div className="w-20 h-20 rounded-2xl bg-slate-100 flex items-center justify-center mb-5">
-        <AlertCircle size={36} className="text-slate-300" />
+      <div className="w-20 h-20 rounded-2xl bg-white/5 flex items-center justify-center mb-5">
+        <AlertCircle size={36} className="text-slate-500" />
       </div>
-      <h3 className="text-lg font-semibold text-slate-700 mb-2">
+      <h3 className="text-lg font-semibold text-slate-200 mb-2">
         {hasFilters ? 'Sin resultados' : 'No hay reportes aún'}
       </h3>
-      <p className="text-sm text-slate-500 max-w-xs mb-6">
+      <p className="text-sm text-slate-400 max-w-xs mb-6">
         {hasFilters
           ? 'No se encontraron reportes que coincidan con los filtros seleccionados. Intenta ajustar los criterios de búsqueda.'
           : 'Comienza reportando el primer daño vial. Los reportes aparecerán aquí.'}
       </p>
       {hasFilters ? (
         <button
-          onClick={() => window.location.reload()}
-          className="text-sm text-green-600 hover:text-green-700 font-medium underline underline-offset-2"
+          onClick={onClearFilters}
+          className="text-sm text-[#4A90D9] hover:text-[#3A7BC8] font-medium underline underline-offset-2 transition-colors"
         >
           Limpiar filtros
         </button>
       ) : (
         <Link
           href="/reports/new"
-          className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-[#FF6B35] to-[#F59E0B] hover:from-[#E55A28] hover:to-[#D97706] text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-lg shadow-[#FF6B35]/20"
         >
           <Plus size={16} />
           Crear primer reporte
@@ -297,21 +299,21 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <>
       {/* Page header */}
-      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-5">
+      <div className="bg-gradient-to-r from-[#0B1A30] to-[#162F56] px-4 sm:px-6 lg:px-8 py-5">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Reportes de Daños</h1>
-              <p className="text-sm text-slate-500 mt-0.5">
+              <h1 className="text-xl font-bold text-white">Reportes de Daños</h1>
+              <p className="text-sm text-white/60 mt-0.5">
                 Gestiona y da seguimiento a los reportes viales
               </p>
             </div>
             <div className="flex items-center gap-2">
               <Link
                 href="/map"
-                className="inline-flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-medium px-3 py-2 rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors"
                 aria-label="Ver mapa"
               >
                 <Map size={16} />
@@ -319,7 +321,7 @@ export default function ReportsPage() {
               </Link>
               <Link
                 href="/reports/new"
-                className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#FF6B35] to-[#F59E0B] hover:from-[#E55A28] hover:to-[#D97706] text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-lg shadow-[#FF6B35]/20"
               >
                 <Plus size={16} />
                 <span>Nuevo Reporte</span>
@@ -330,33 +332,33 @@ export default function ReportsPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-3">
+      <div className="bg-[#0F1A2E]/90 backdrop-blur-sm border-b border-white/5 px-4 sm:px-6 lg:px-8 py-3">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row gap-3">
             {/* Search */}
             <div className="relative flex-1 min-w-0">
               <Search
                 size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
               />
               <input
                 type="search"
                 placeholder="Buscar por numero, titulo, sector..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder:text-slate-400 text-slate-800"
+                className="w-full pl-9 pr-4 py-2 text-sm bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A90D9] focus:border-[#4A90D9] placeholder:text-slate-500 text-white"
                 aria-label="Buscar reportes"
               />
             </div>
 
             {/* Filter selects */}
             <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-              <Filter size={15} className="text-slate-400 shrink-0 hidden sm:block" />
+              <Filter size={15} className="text-slate-500 shrink-0 hidden sm:block" />
 
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="flex-1 sm:flex-none text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-slate-700 cursor-pointer"
+                className="flex-1 sm:flex-none text-sm bg-white/5 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#4A90D9] focus:border-[#4A90D9] text-slate-200 cursor-pointer"
                 aria-label="Filtrar por estado"
               >
                 {STATUS_FILTER_OPTIONS.map((opt) => (
@@ -369,7 +371,7 @@ export default function ReportsPage() {
               <select
                 value={severityFilter}
                 onChange={(e) => setSeverityFilter(e.target.value)}
-                className="flex-1 sm:flex-none text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-slate-700 cursor-pointer"
+                className="flex-1 sm:flex-none text-sm bg-white/5 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#4A90D9] focus:border-[#4A90D9] text-slate-200 cursor-pointer"
                 aria-label="Filtrar por severidad"
               >
                 {SEVERITY_FILTER_OPTIONS.map((opt) => (
@@ -382,7 +384,7 @@ export default function ReportsPage() {
               <select
                 value={zoneFilter}
                 onChange={(e) => setZoneFilter(e.target.value)}
-                className="flex-1 sm:flex-none text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-slate-700 cursor-pointer"
+                className="flex-1 sm:flex-none text-sm bg-white/5 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#4A90D9] focus:border-[#4A90D9] text-slate-200 cursor-pointer"
                 aria-label="Filtrar por zona"
               >
                 {ZONE_FILTER_OPTIONS.map((opt) => (
@@ -392,11 +394,11 @@ export default function ReportsPage() {
                 ))}
               </select>
 
-              <div className="hidden sm:flex border-l border-slate-200 pl-2 gap-1">
+              <div className="hidden sm:flex border-l border-white/10 pl-2 gap-1">
                 <button
                   aria-label="Vista de lista"
                   title="Vista lista"
-                  className="p-2 rounded-lg bg-slate-100 text-slate-600"
+                  className="p-2 rounded-lg bg-white/10 text-white"
                 >
                   <LayoutList size={15} />
                 </button>
@@ -404,7 +406,7 @@ export default function ReportsPage() {
                   href="/map"
                   aria-label="Vista de mapa"
                   title="Vista mapa"
-                  className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                  className="p-2 rounded-lg text-slate-500 hover:bg-white/10 hover:text-slate-300 transition-colors"
                 >
                   <Map size={15} />
                 </Link>
@@ -418,16 +420,16 @@ export default function ReportsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Results count + clear filters */}
         <div className="flex items-center justify-between mb-4">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Mostrando{' '}
-            <span className="font-semibold text-slate-700">{filteredReports.length}</span>{' '}
+            <span className="font-semibold text-slate-200">{filteredReports.length}</span>{' '}
             {filteredReports.length === 1 ? 'reporte' : 'reportes'}
             {hasActiveFilters && ' (filtrado)'}
           </p>
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="text-xs text-green-600 hover:text-green-700 font-medium transition-colors"
+              className="text-xs text-[#4A90D9] hover:text-[#3A7BC8] font-medium transition-colors"
             >
               Limpiar filtros
             </button>
@@ -436,7 +438,7 @@ export default function ReportsPage() {
 
         {/* Report cards */}
         {filteredReports.length === 0 ? (
-          <EmptyState hasFilters={hasActiveFilters} />
+          <EmptyState hasFilters={hasActiveFilters} onClearFilters={clearFilters} />
         ) : (
           <div className="space-y-3" role="list" aria-label="Lista de reportes">
             {filteredReports.map((report) => (
@@ -447,6 +449,6 @@ export default function ReportsPage() {
           </div>
         )}
       </div>
-    </div>
+    </>
   )
 }

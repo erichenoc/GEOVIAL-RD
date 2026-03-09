@@ -12,15 +12,10 @@ interface ChartCardProps {
 
 export function ChartCard({ title, description, children, className, action }: ChartCardProps) {
   return (
-    <div
-      className={cn(
-        'rounded-xl bg-white border border-slate-100 shadow-sm overflow-hidden',
-        className
-      )}
-    >
-      <div className="flex items-start justify-between px-6 pt-5 pb-4 border-b border-slate-50">
+    <div className={cn('eng-card rounded-xl overflow-hidden', className)}>
+      <div className="flex items-start justify-between px-6 pt-5 pb-4 border-b border-white/10">
         <div>
-          <h3 className="text-sm font-semibold text-slate-800 leading-tight">{title}</h3>
+          <h3 className="text-sm font-semibold text-white leading-tight">{title}</h3>
           {description && (
             <p className="mt-0.5 text-xs text-slate-400">{description}</p>
           )}

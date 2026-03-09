@@ -143,27 +143,37 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        'hidden lg:flex flex-col bg-slate-900 border-r border-slate-800 transition-all duration-300 ease-in-out shrink-0',
+        'hidden lg:flex flex-col bg-gradient-to-b from-[#0B1A30] via-[#0F2341] to-[#162F56] border-r border-white/5 transition-all duration-300 ease-in-out shrink-0',
         sidebarCollapsed ? 'w-16' : 'w-64'
       )}
     >
       {/* Logo */}
       <div
         className={cn(
-          'flex items-center gap-3 px-4 py-5 border-b border-slate-800',
+          'flex items-center gap-3 px-4 py-5 border-b border-white/5',
           sidebarCollapsed && 'justify-center px-0'
         )}
       >
-        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-500/10 border border-green-500/20 shrink-0">
-          <Shield size={16} className="text-green-400" />
+        <div
+          className={cn(
+            'flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-r from-[#4A90D9] to-[#D4A017] shrink-0',
+            'shadow-[0_0_12px_rgba(212,160,23,0.45)]'
+          )}
+        >
+          <Shield size={16} className="text-white" />
         </div>
         {!sidebarCollapsed && (
           <div>
-            <span className="text-white font-bold text-base tracking-wider leading-none">
-              GEOVIAL
-            </span>
-            <span className="block text-slate-400 text-[10px] tracking-widest leading-tight mt-0.5">
-              RD
+            <div className="flex items-baseline gap-1 leading-none">
+              <span className="text-white font-bold text-base tracking-wider">
+                GEOVIAL
+              </span>
+              <span className="text-[#D4A017] font-bold text-base tracking-wider">
+                RD
+              </span>
+            </div>
+            <span className="block text-[#4A90D9]/60 text-[9px] tracking-[0.2em] leading-tight mt-0.5 uppercase">
+              Infraestructura Inteligente
             </span>
           </div>
         )}
@@ -174,7 +184,7 @@ export function Sidebar({
         {visibleGroups.map((group) => (
           <div key={group.group}>
             {!sidebarCollapsed && (
-              <p className="px-3 mb-2 text-[10px] font-semibold tracking-widest text-slate-500 uppercase">
+              <p className="px-3 mb-2 text-[10px] font-semibold tracking-[0.18em] text-[#4A90D9]/50 uppercase">
                 {group.group}
               </p>
             )}
@@ -193,7 +203,7 @@ export function Sidebar({
                         title={sidebarCollapsed ? item.label : undefined}
                         className={cn(
                           'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150',
-                          'bg-green-500 text-white hover:bg-green-400',
+                          'bg-gradient-to-r from-[#FF6B35] to-[#F59E0B] text-white hover:opacity-90 shadow-[0_2px_8px_rgba(255,107,53,0.35)]',
                           sidebarCollapsed && 'justify-center px-0 w-10 mx-auto'
                         )}
                       >
@@ -210,13 +220,21 @@ export function Sidebar({
                       href={item.href}
                       title={sidebarCollapsed ? item.label : undefined}
                       className={cn(
-                        'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150',
+                        'relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150',
                         isActive
-                          ? 'bg-green-500/10 text-green-400 border-l-2 border-green-500 pl-[10px]'
-                          : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800',
-                        sidebarCollapsed && 'justify-center px-0 w-10 mx-auto border-l-0 pl-0'
+                          ? 'bg-[#4A90D9]/10 text-[#4A90D9]'
+                          : 'text-slate-400 hover:text-white hover:bg-white/5',
+                        sidebarCollapsed && 'justify-center px-0 w-10 mx-auto'
                       )}
                     >
+                      {/* Active left-border gradient indicator */}
+                      {isActive && !sidebarCollapsed && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-gradient-to-b from-[#D4A017] to-[#F59E0B]"
+                          style={{ boxShadow: '0 0 6px rgba(212, 160, 23, 0.35)' }}
+                        />
+                      )}
                       <span className="shrink-0">{item.icon}</span>
                       {!sidebarCollapsed && <span>{item.label}</span>}
                     </Link>
@@ -230,9 +248,9 @@ export function Sidebar({
 
       {/* User info */}
       {!sidebarCollapsed && (
-        <div className="px-3 py-3 border-t border-slate-800">
-          <div className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-500/20 border border-green-500/30 text-green-400 text-xs font-bold shrink-0">
+        <div className="px-3 py-3 border-t border-white/5">
+          <div className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-[#4A90D9] to-[#D4A017] text-white text-xs font-bold shrink-0">
               {initials}
             </div>
             <div className="flex-1 min-w-0">
@@ -243,7 +261,7 @@ export function Sidebar({
                 {orgName}
               </p>
             </div>
-            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-700 text-slate-400 shrink-0">
+            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-[#D4A017]/10 text-[#D4A017] shrink-0">
               {ROLE_LABELS[role]}
             </span>
           </div>
@@ -251,12 +269,12 @@ export function Sidebar({
       )}
 
       {/* Collapse toggle */}
-      <div className="px-2 py-2 border-t border-slate-800">
+      <div className="px-2 py-2 border-t border-white/5">
         <button
           onClick={toggleSidebar}
           aria-label={sidebarCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
           className={cn(
-            'flex items-center gap-2 w-full rounded-lg px-3 py-2 text-sm text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-all duration-150',
+            'flex items-center gap-2 w-full rounded-lg px-3 py-2 text-sm text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all duration-150',
             sidebarCollapsed && 'justify-center px-0'
           )}
         >

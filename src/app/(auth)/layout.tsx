@@ -14,8 +14,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-slate-900 p-12 lg:flex">
         {/* Background gradient */}
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-32 -top-32 h-[500px] w-[500px] rounded-full bg-green-500/10 blur-[100px]" />
-          <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-green-500/8 blur-[100px]" />
+          <div className="absolute -left-32 -top-32 h-[500px] w-[500px] rounded-full bg-[#D4A017]/10 blur-[100px]" />
+          <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-[#D4A017]/8 blur-[100px]" />
           <div
             className="absolute inset-0 opacity-[0.03]"
             style={{
@@ -27,11 +27,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         {/* Top: Logo */}
         <Link href="/" className="relative flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-500 shadow-lg shadow-green-500/30">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#4A90D9] to-[#D4A017] shadow-lg shadow-[#D4A017]/30">
             <MapPin className="h-5 w-5 text-white" />
           </div>
           <span className="text-xl font-bold tracking-tight text-white">
-            GEO<span className="text-green-500">VIAL</span>
+            GEO<span className="text-[#D4A017]">VIAL</span>
             <span className="ml-1 text-slate-400">RD</span>
           </span>
         </Link>
@@ -43,9 +43,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             <AuthIllustration />
           </div>
 
-          <h2 className="mb-4 text-3xl font-bold leading-tight text-white">
+          <h2 className="mb-2 text-3xl font-bold leading-tight text-white">
             Gestion vial moderna para tu municipio
           </h2>
+          <p className="mb-3 text-sm font-semibold tracking-wide text-[#D4A017] uppercase">
+            Infraestructura Inteligente en Accion
+          </p>
           <p className="mb-8 text-slate-400">
             Unete a mas de 158 municipios que ya transformaron su infraestructura vial con GEOVIAL RD.
           </p>
@@ -54,7 +57,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <div className="space-y-4">
             {FEATURES.map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-center gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-500/15 text-green-400">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#D4A017]/15 text-[#D4A017]">
                   <Icon className="h-4 w-4" />
                 </div>
                 <span className="text-sm text-slate-300">{text}</span>
@@ -75,11 +78,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="flex w-full flex-col items-center justify-center px-6 py-12 lg:w-1/2 lg:px-16">
         {/* Mobile logo */}
         <Link href="/" className="mb-10 flex items-center gap-2 lg:hidden">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#4A90D9] to-[#D4A017]">
             <MapPin className="h-4 w-4 text-white" />
           </div>
           <span className="text-lg font-bold text-white">
-            GEO<span className="text-green-500">VIAL</span>
+            GEO<span className="text-[#D4A017]">VIAL</span>
             <span className="ml-1 text-slate-400">RD</span>
           </span>
         </Link>
@@ -97,13 +100,13 @@ function AuthIllustration() {
       <div
         className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: `linear-gradient(rgba(34,197,94,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(34,197,94,0.4) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(rgba(212,160,23,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(212,160,23,0.4) 1px, transparent 1px)`,
           backgroundSize: '28px 28px',
         }}
       />
       {/* Road lines */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-green-500/30" />
-      <div className="absolute top-1/2 left-0 right-0 h-px -translate-y-1/2 bg-green-500/30" />
+      <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-[#D4A017]/30" />
+      <div className="absolute top-1/2 left-0 right-0 h-px -translate-y-1/2 bg-[#D4A017]/30" />
 
       {/* Location pins */}
       {[
@@ -122,7 +125,7 @@ function AuthIllustration() {
 
       {/* Status badge */}
       <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-900/90 px-3 py-1.5 text-xs font-medium text-white">
-        <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
+        <span className="h-1.5 w-1.5 rounded-full bg-[#D4A017] animate-pulse" />
         En vivo
       </div>
     </div>

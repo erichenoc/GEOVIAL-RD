@@ -18,6 +18,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-08T09:23:00Z',
     brigade_name: 'Brigada Alpha',
     photo_color: 'bg-amber-700',
+    photo_url: '/images/reports/pothole-1.jpg',
   },
   {
     id: '2',
@@ -36,6 +37,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-10T14:05:00Z',
     brigade_name: null,
     photo_color: 'bg-slate-600',
+    photo_url: '/images/reports/drain-1.jpg',
   },
   {
     id: '3',
@@ -54,6 +56,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-12T08:30:00Z',
     brigade_name: 'Brigada Beta',
     photo_color: 'bg-gray-500',
+    photo_url: '/images/reports/crack-1.jpg',
   },
   {
     id: '4',
@@ -72,6 +75,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-15T10:45:00Z',
     brigade_name: null,
     photo_color: 'bg-stone-600',
+    photo_url: '/images/reports/road-damage-1.jpg',
   },
   {
     id: '5',
@@ -90,6 +94,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-01-28T11:20:00Z',
     brigade_name: 'Brigada Gamma',
     photo_color: 'bg-yellow-600',
+    photo_url: '/images/reports/signage-1.jpg',
   },
   {
     id: '6',
@@ -108,6 +113,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-18T07:15:00Z',
     brigade_name: 'Brigada Alpha',
     photo_color: 'bg-amber-800',
+    photo_url: '/images/reports/pothole-2.jpg',
   },
   {
     id: '7',
@@ -126,6 +132,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-20T13:40:00Z',
     brigade_name: null,
     photo_color: 'bg-blue-700',
+    photo_url: '/images/reports/sidewalk-1.jpg',
   },
   {
     id: '8',
@@ -144,6 +151,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-22T08:55:00Z',
     brigade_name: 'Brigada Beta',
     photo_color: 'bg-blue-500',
+    photo_url: '/images/reports/flooding-1.jpg',
   },
   {
     id: '9',
@@ -162,6 +170,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-25T16:30:00Z',
     brigade_name: null,
     photo_color: 'bg-gray-400',
+    photo_url: '/images/reports/marking-1.jpg',
   },
   {
     id: '10',
@@ -180,6 +189,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-16T09:10:00Z',
     brigade_name: null,
     photo_color: 'bg-orange-700',
+    photo_url: '/images/reports/road-damage-1.jpg',
   },
   {
     id: '11',
@@ -198,6 +208,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-23T20:15:00Z',
     brigade_name: null,
     photo_color: 'bg-yellow-800',
+    photo_url: '/images/reports/lighting-1.jpg',
   },
   {
     id: '12',
@@ -216,6 +227,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-26T11:05:00Z',
     brigade_name: null,
     photo_color: 'bg-red-800',
+    photo_url: '/images/reports/crack-1.jpg',
   },
   {
     id: '13',
@@ -234,6 +246,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-19T14:30:00Z',
     brigade_name: 'Brigada Gamma',
     photo_color: 'bg-slate-700',
+    photo_url: '/images/reports/drain-1.jpg',
   },
   {
     id: '14',
@@ -252,6 +265,7 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-02-24T09:45:00Z',
     brigade_name: 'Brigada Alpha',
     photo_color: 'bg-zinc-600',
+    photo_url: '/images/reports/road-damage-1.jpg',
   },
   {
     id: '15',
@@ -270,5 +284,6 @@ export const MOCK_REPORTS: MockReport[] = [
     reported_at: '2026-01-30T06:50:00Z',
     brigade_name: 'Brigada Beta',
     photo_color: 'bg-green-800',
+    photo_url: '/images/reports/road-damage-1.jpg',
   },
 ]

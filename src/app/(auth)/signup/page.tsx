@@ -60,8 +60,8 @@ function SignupForm() {
   return (
     <div className="animate-fade-in-up">
       <div className="mb-8">
-        <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-green-500/15">
-          <KeyRound className="h-5 w-5 text-green-400" />
+        <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#D4A017]/15">
+          <KeyRound className="h-5 w-5 text-[#D4A017]" />
         </div>
         <h1 className="text-2xl font-bold text-white">Registro por Invitacion</h1>
         <p className="mt-2 text-sm text-slate-400">
@@ -159,7 +159,7 @@ function SignupForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-500 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/25 disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-950"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6B35] to-[#F59E0B] py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-[#F59E0B]/25 disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] focus:ring-offset-2 focus:ring-offset-slate-950"
         >
           {isSubmitting ? (
             <>
@@ -176,7 +176,7 @@ function SignupForm() {
         Ya tienes cuenta?{' '}
         <Link
           href="/login"
-          className="font-medium text-green-400 transition-colors hover:text-green-300"
+          className="font-medium text-[#D4A017] transition-colors hover:text-[#B8890F]"
         >
           Iniciar sesion
         </Link>
@@ -235,6 +235,6 @@ function inputClass(hasError: boolean) {
     'w-full rounded-xl border bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-600 backdrop-blur-sm transition-all duration-200 outline-none',
     hasError
       ? 'border-red-500/50 focus:border-red-400 focus:ring-2 focus:ring-red-400/20'
-      : 'border-white/10 focus:border-green-500/50 focus:ring-2 focus:ring-green-500/15 hover:border-white/20'
+      : 'border-white/10 focus:border-[#4A90D9]/50 focus:ring-2 focus:ring-[#4A90D9]/15 hover:border-white/20'
   )
 }

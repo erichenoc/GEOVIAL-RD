@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import {
   ArrowLeft,
@@ -15,6 +15,9 @@ import {
   ChevronDown,
   CheckCircle2,
   XCircle,
+  ZoomIn,
+  ExternalLink,
+  ImagePlus,
 } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 
@@ -47,7 +50,7 @@ const MOCK_COMMENTS: Comment[] = [
     initials: 'CM',
     name: 'Carlos Martinez',
     role: 'Inspector',
-    roleColor: 'bg-blue-50 text-blue-700',
+    roleColor: 'bg-blue-500/15 text-blue-400',
     date: '15 Feb, 09:35 AM',
     content:
       'Reporte levantado en campo. El bache mide aproximadamente 60cm de diametro y 12cm de profundidad. Riesgo moderado para motocicletas.',
@@ -57,7 +60,7 @@ const MOCK_COMMENTS: Comment[] = [
     initials: 'AR',
     name: 'Ana Rosario',
     role: 'Supervisora',
-    roleColor: 'bg-indigo-50 text-indigo-700',
+    roleColor: 'bg-indigo-500/15 text-indigo-400',
     date: '15 Feb, 10:20 AM',
     content:
       'Reporte revisado y aprobado. Se asigna a Brigada Alpha para intervencion esta semana. Prioridad media-alta.',
@@ -67,7 +70,7 @@ const MOCK_COMMENTS: Comment[] = [
     initials: 'MT',
     name: 'Miguel Torres',
     role: 'Brigada',
-    roleColor: 'bg-green-50 text-green-700',
+    roleColor: 'bg-green-500/15 text-green-400',
     date: '16 Feb, 08:15 AM',
     content:
       'Brigada Alpha en camino. Estimamos 4 horas de trabajo para reparacion completa con bacheo en frio.',
@@ -81,7 +84,7 @@ const MOCK_TIMELINE: TimelineEntry[] = [
     date: 'Feb 15, 09:32 - Carlos Martinez',
     author: 'Carlos Martinez',
     dotColor: 'bg-green-500',
-    lineColor: 'bg-green-200',
+    lineColor: 'bg-green-500/30',
   },
   {
     id: '2',
@@ -89,7 +92,7 @@ const MOCK_TIMELINE: TimelineEntry[] = [
     date: 'Feb 15, 10:15 - Ana Rosario',
     author: 'Ana Rosario',
     dotColor: 'bg-blue-500',
-    lineColor: 'bg-blue-200',
+    lineColor: 'bg-blue-500/30',
   },
   {
     id: '3',
@@ -97,7 +100,7 @@ const MOCK_TIMELINE: TimelineEntry[] = [
     date: 'Feb 15, 14:30 - Ana Rosario',
     author: 'Ana Rosario',
     dotColor: 'bg-indigo-500',
-    lineColor: 'bg-indigo-200',
+    lineColor: 'bg-indigo-500/30',
   },
   {
     id: '4',
@@ -105,11 +108,46 @@ const MOCK_TIMELINE: TimelineEntry[] = [
     date: 'Feb 16, 08:00 - Miguel Torres',
     author: 'Miguel Torres',
     dotColor: 'bg-orange-500',
-    lineColor: 'bg-slate-200',
+    lineColor: 'bg-white/10',
   },
 ]
 
 const BRIGADES = ['Brigada Alpha', 'Brigada Beta', 'Brigada Gamma', 'Brigada Delta']
+
+type PhotoTab = 'before' | 'during' | 'after'
+
+const PHOTO_TABS: { key: PhotoTab; label: string }[] = [
+  { key: 'before', label: 'Antes' },
+  { key: 'during', label: 'Durante' },
+  { key: 'after', label: 'Despues' },
+]
+
+const PHOTO_DATA: Record<PhotoTab, { main: string; thumbs: string[] }> = {
+  before: {
+    main: '/images/phases/before-1.jpg',
+    thumbs: [
+      '/images/phases/before-1.jpg',
+      '/images/reports/pothole-1.jpg',
+      '/images/reports/crack-1.jpg',
+    ],
+  },
+  during: {
+    main: '/images/phases/during-1.jpg',
+    thumbs: [
+      '/images/phases/during-1.jpg',
+      '/images/reports/road-damage-1.jpg',
+      '/images/reports/sidewalk-1.jpg',
+    ],
+  },
+  after: {
+    main: '/images/phases/after-1.jpg',
+    thumbs: [
+      '/images/phases/after-1.jpg',
+      '/images/reports/pothole-2.jpg',
+      '/images/reports/marking-1.jpg',
+    ],
+  },
+}
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -123,11 +161,11 @@ function InfoRow({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex items-start gap-3 py-2.5 border-b border-slate-50 last:border-0">
+    <div className="flex items-start gap-3 py-2.5 border-b border-white/5 last:border-0">
       <div className="text-slate-400 mt-0.5 shrink-0">{icon}</div>
       <div className="min-w-0 flex-1">
         <p className="text-xs text-slate-400 mb-0.5">{label}</p>
-        <div className="text-sm text-slate-700 font-medium">{children}</div>
+        <div className="text-sm text-slate-200 font-medium">{children}</div>
       </div>
     </div>
   )
@@ -145,6 +183,25 @@ export default function ReportDetailPage() {
   const [brigadeDropdownOpen, setBrigadeDropdownOpen] = useState(false)
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false)
   const [selectedBrigade, setSelectedBrigade] = useState('Brigada Alpha')
+  const [activePhotoTab, setActivePhotoTab] = useState<PhotoTab>('before')
+  const [activeThumbIndex, setActiveThumbIndex] = useState(0)
+  const uploadInputRef = useRef<HTMLInputElement>(null)
+  const [uploadedPhotos, setUploadedPhotos] = useState<Record<PhotoTab, string[]>>({
+    before: [],
+    during: [],
+    after: [],
+  })
+
+  function handleUploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+    const newUrls = Array.from(files).map((f) => URL.createObjectURL(f))
+    setUploadedPhotos((prev) => ({
+      ...prev,
+      [activePhotoTab]: [...prev[activePhotoTab], ...newUrls].slice(0, 10),
+    }))
+    if (uploadInputRef.current) uploadInputRef.current.value = ''
+  }
 
   function handleAddComment() {
     if (!comment.trim()) return
@@ -153,7 +210,7 @@ export default function ReportDetailPage() {
       initials: 'TU',
       name: 'Tu Nombre',
       role: 'Supervisor',
-      roleColor: 'bg-indigo-50 text-indigo-700',
+      roleColor: 'bg-indigo-500/15 text-indigo-400',
       date: 'Ahora',
       content: comment.trim(),
     }
@@ -166,9 +223,9 @@ export default function ReportDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0B1A30]">
       {/* ── Header ── */}
-      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-4 sticky top-0 z-10">
+      <div className="bg-[#0F1A2E] border-b border-white/10 px-4 sm:px-6 py-4 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             {/* Back + title */}
@@ -176,16 +233,16 @@ export default function ReportDetailPage() {
               <button
                 onClick={() => router.back()}
                 aria-label="Regresar a reportes"
-                className="flex items-center justify-center w-9 h-9 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors shrink-0"
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors shrink-0"
               >
                 <ArrowLeft size={20} />
               </button>
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-base font-bold text-slate-900">
+                  <h1 className="text-base font-bold text-white">
                     Reporte DN-00000{reportId}
                   </h1>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-500/15 text-orange-400 border border-orange-500/20">
                     <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
                     En Proceso
                   </span>
@@ -206,7 +263,7 @@ export default function ReportDetailPage() {
                   <ChevronDown size={14} />
                 </button>
                 {brigadeDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-slate-200 rounded-xl shadow-lg py-1 z-20">
+                  <div className="absolute right-0 top-full mt-1 w-48 bg-[#0F1A2E] border border-white/10 rounded-xl shadow-lg py-1 z-20">
                     {BRIGADES.map((brigade) => (
                       <button
                         key={brigade}
@@ -217,8 +274,8 @@ export default function ReportDetailPage() {
                         className={cn(
                           'w-full text-left px-3 py-2 text-sm transition-colors',
                           brigade === selectedBrigade
-                            ? 'bg-blue-50 text-blue-700 font-medium'
-                            : 'text-slate-700 hover:bg-slate-50'
+                            ? 'bg-blue-500/15 text-blue-400 font-medium'
+                            : 'text-slate-200 hover:bg-white/5'
                         )}
                       >
                         {brigade}
@@ -232,23 +289,23 @@ export default function ReportDetailPage() {
               <div className="relative">
                 <button
                   onClick={() => setStatusDropdownOpen((p) => !p)}
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium transition-colors border border-slate-200"
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1B2B4B] hover:bg-white/10 text-slate-200 text-sm font-medium transition-colors border border-white/10"
                 >
                   Cambiar Estado
                   <ChevronDown size={14} />
                 </button>
                 {statusDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-lg py-1 z-20">
+                  <div className="absolute right-0 top-full mt-1 w-52 bg-[#0F1A2E] border border-white/10 rounded-xl shadow-lg py-1 z-20">
                     <button
                       onClick={() => setStatusDropdownOpen(false)}
-                      className="w-full text-left px-3 py-2.5 text-sm text-green-700 hover:bg-green-50 transition-colors flex items-center gap-2"
+                      className="w-full text-left px-3 py-2.5 text-sm text-green-400 hover:bg-green-500/15 transition-colors flex items-center gap-2"
                     >
                       <CheckCircle2 size={15} />
                       Marcar Completado
                     </button>
                     <button
                       onClick={() => setStatusDropdownOpen(false)}
-                      className="w-full text-left px-3 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
+                      className="w-full text-left px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/15 transition-colors flex items-center gap-2"
                     >
                       <XCircle size={15} />
                       Rechazar Reporte
@@ -269,43 +326,127 @@ export default function ReportDetailPage() {
           <div className="lg:col-span-2 space-y-5">
 
             {/* Photo section */}
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-              {/* Main photo */}
-              <div className="relative h-80 lg:h-96 bg-slate-200 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-3 text-slate-400">
-                  <Camera size={48} className="opacity-40" />
-                  <p className="text-sm font-medium opacity-60">Foto principal del dano</p>
+            <div className="bg-[#0F1A2E] rounded-2xl border border-white/10 overflow-hidden shadow-sm">
+              {/* Tab bar */}
+              <div className="flex items-center gap-1 px-4 pt-4 pb-0">
+                <Camera size={15} className="text-slate-400 mr-1" />
+                <span className="text-xs font-semibold text-slate-400 mr-3">Evidencia Fotografica</span>
+                <div className="flex gap-1 ml-auto">
+                  {PHOTO_TABS.map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => { setActivePhotoTab(tab.key); setActiveThumbIndex(0) }}
+                      className={cn(
+                        'px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors',
+                        activePhotoTab === tab.key
+                          ? 'bg-green-600 text-white shadow-sm'
+                          : 'bg-[#1B2B4B] text-slate-400 hover:bg-white/10'
+                      )}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
                 </div>
+              </div>
+
+              {/* Main photo */}
+              <div className="relative h-72 lg:h-96 mt-3 mx-4 rounded-xl overflow-hidden bg-white/10 group">
+                <img
+                  src={PHOTO_DATA[activePhotoTab].thumbs[activeThumbIndex]}
+                  alt={`Foto ${PHOTO_TABS.find(t => t.key === activePhotoTab)?.label} del reporte`}
+                  loading="lazy"
+                  className="w-full h-full object-cover transition-opacity duration-300"
+                />
+                {/* Overlay label */}
                 <div className="absolute top-3 left-3">
-                  <span className="bg-black/50 text-white text-xs px-2 py-1 rounded-lg font-medium">
-                    Antes
+                  <span className="bg-black/55 text-white text-xs px-2.5 py-1 rounded-lg font-semibold backdrop-blur-sm">
+                    {PHOTO_TABS.find(t => t.key === activePhotoTab)?.label}
+                  </span>
+                </div>
+                {/* Zoom hint */}
+                <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="flex items-center gap-1 bg-black/55 text-white text-xs px-2 py-1 rounded-lg backdrop-blur-sm">
+                    <ZoomIn size={12} />
+                    Foto {activeThumbIndex + 1} / {PHOTO_DATA[activePhotoTab].thumbs.length}
                   </span>
                 </div>
               </div>
 
-              {/* Thumbnails */}
-              <div className="grid grid-cols-3 gap-1 p-1">
-                {(['Antes', 'Durante', 'Despues'] as const).map((label) => (
-                  <div
-                    key={label}
-                    className="relative aspect-video bg-slate-100 rounded-lg flex items-center justify-center cursor-pointer hover:bg-slate-200 transition-colors"
+              {/* Thumbnail strip */}
+              <div className="grid grid-cols-3 gap-2 px-4 pt-2">
+                {PHOTO_DATA[activePhotoTab].thumbs.map((thumbUrl, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveThumbIndex(idx)}
+                    className={cn(
+                      'relative aspect-video rounded-lg overflow-hidden transition-all duration-150',
+                      activeThumbIndex === idx
+                        ? 'ring-2 ring-[#4A90D9] ring-offset-1 scale-[0.98]'
+                        : 'hover:opacity-90'
+                    )}
+                    aria-label={`Ver foto ${idx + 1}`}
+                    aria-pressed={activeThumbIndex === idx}
                   >
-                    <Camera size={16} className="text-slate-400" />
-                    <span className="absolute bottom-1 left-1 bg-black/40 text-white text-[10px] px-1.5 py-0.5 rounded font-medium">
-                      {label}
+                    <img
+                      src={thumbUrl}
+                      alt={`Miniatura ${idx + 1}`}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/10" />
+                    <span className="absolute bottom-1 left-1.5 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded font-medium">
+                      {idx + 1}
                     </span>
-                  </div>
+                  </button>
                 ))}
+              </div>
+
+              {/* Uploaded photos for this phase */}
+              {uploadedPhotos[activePhotoTab].length > 0 && (
+                <div className="px-4 pt-2">
+                  <p className="text-[10px] font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Nuevas fotos agregadas</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {uploadedPhotos[activePhotoTab].map((url, idx) => (
+                      <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border-2 border-[#4A90D9]/30">
+                        <img src={url} alt={`Nueva foto ${idx + 1}`} className="w-full h-full object-cover" />
+                        <span className="absolute bottom-1 left-1.5 bg-[#4A90D9] text-white text-[10px] px-1.5 py-0.5 rounded font-medium">
+                          Nuevo
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Upload photo button */}
+              <div className="p-4 pt-2">
+                <input
+                  ref={uploadInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  multiple
+                  onChange={handleUploadPhoto}
+                  className="sr-only"
+                  aria-label="Subir foto"
+                />
+                <button
+                  onClick={() => uploadInputRef.current?.click()}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-dashed border-white/10 hover:border-[#4A90D9]/50 rounded-xl text-xs font-medium text-slate-400 hover:text-[#4A90D9] transition-all"
+                >
+                  <ImagePlus size={14} />
+                  Agregar foto — {PHOTO_TABS.find(t => t.key === activePhotoTab)?.label}
+                </button>
               </div>
             </div>
 
             {/* Description */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-              <h2 className="text-base font-bold text-slate-900 mb-1">
+            <div className="bg-[#0F1A2E] rounded-2xl border border-white/10 p-5 shadow-sm">
+              <h2 className="text-base font-bold text-white mb-1">
                 Bache profundo en Av. 27 de Febrero
               </h2>
               <p className="text-xs text-slate-400 mb-3">Via: Av. 27 de Febrero esq. Tiradentes</p>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-300 leading-relaxed">
                 Bache de aproximadamente 60cm de diametro y 12cm de profundidad ubicado en el carril
                 derecho. La cavidad presenta bordes irregulares y acumulacion de agua en dias de
                 lluvia. Representa un riesgo moderado para motocicletas y vehiculos de transporte
@@ -314,8 +455,8 @@ export default function ReportDetailPage() {
             </div>
 
             {/* Comments */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-              <h2 className="text-sm font-semibold text-slate-800 mb-4">
+            <div className="bg-[#0F1A2E] rounded-2xl border border-white/10 p-5 shadow-sm">
+              <h2 className="text-sm font-semibold text-slate-100 mb-4">
                 Comentarios ({comments.length})
               </h2>
 
@@ -324,7 +465,7 @@ export default function ReportDetailPage() {
                   <article key={c.id} className="flex gap-3">
                     {/* Avatar */}
                     <div
-                      className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-200 text-slate-600 text-xs font-bold shrink-0"
+                      className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-slate-300 text-xs font-bold shrink-0"
                       aria-hidden="true"
                     >
                       {c.initials}
@@ -332,7 +473,7 @@ export default function ReportDetailPage() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className="text-sm font-semibold text-slate-800">{c.name}</span>
+                        <span className="text-sm font-semibold text-slate-100">{c.name}</span>
                         <span
                           className={cn(
                             'text-[10px] font-medium px-1.5 py-0.5 rounded-md',
@@ -343,14 +484,14 @@ export default function ReportDetailPage() {
                         </span>
                         <span className="text-xs text-slate-400">{c.date}</span>
                       </div>
-                      <p className="text-sm text-slate-600 leading-relaxed">{c.content}</p>
+                      <p className="text-sm text-slate-300 leading-relaxed">{c.content}</p>
                     </div>
                   </article>
                 ))}
               </div>
 
               {/* Add comment input */}
-              <div className="flex gap-2 pt-3 border-t border-slate-100">
+              <div className="flex gap-2 pt-3 border-t border-white/5">
                 <input
                   type="text"
                   value={comment}
@@ -358,7 +499,7 @@ export default function ReportDetailPage() {
                   onKeyDown={handleKeyDown}
                   placeholder="Agregar un comentario..."
                   aria-label="Escribir comentario"
-                  className="flex-1 px-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder:text-slate-400 text-slate-800"
+                  className="flex-1 px-3 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder:text-slate-500 text-slate-100"
                 />
                 <button
                   onClick={handleAddComment}
@@ -376,15 +517,15 @@ export default function ReportDetailPage() {
           <div className="space-y-4">
 
             {/* Info card */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-              <h2 className="text-sm font-semibold text-slate-800 mb-3">Informacion</h2>
+            <div className="bg-[#0F1A2E] rounded-2xl border border-white/10 p-5 shadow-sm">
+              <h2 className="text-sm font-semibold text-slate-100 mb-3">Informacion</h2>
 
               <InfoRow icon={<CircleDot size={15} />} label="Tipo de dano">
                 Bache
               </InfoRow>
 
               <InfoRow icon={<span className="w-3.5 h-3.5 rounded-full bg-orange-500 inline-block" />} label="Severidad">
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium bg-orange-50 text-orange-700 border border-orange-200">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium bg-orange-500/15 text-orange-400 border border-orange-500/20">
                   Alta
                 </span>
               </InfoRow>
@@ -404,7 +545,29 @@ export default function ReportDetailPage() {
               </InfoRow>
 
               <InfoRow icon={<MapPin size={15} />} label="Coordenadas">
-                <span className="font-mono text-xs">18.4861, -69.9312</span>
+                <div>
+                  <span className="font-mono text-xs block mb-2">18.4861, -69.9312</span>
+                  <div className="flex gap-1.5">
+                    <a
+                      href="https://www.google.com/maps?q=18.4861,-69.9312"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-[#1B2B4B] hover:bg-white/10 rounded text-[10px] font-medium text-slate-200 transition-colors"
+                    >
+                      <ExternalLink size={10} />
+                      Google Maps
+                    </a>
+                    <a
+                      href="https://www.waze.com/ul?ll=18.4861,-69.9312&navigate=yes"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-[#1B2B4B] hover:bg-white/10 rounded text-[10px] font-medium text-slate-200 transition-colors"
+                    >
+                      <ExternalLink size={10} />
+                      Waze
+                    </a>
+                  </div>
+                </div>
               </InfoRow>
 
               <InfoRow icon={<User size={15} />} label="Reportado por">
@@ -416,7 +579,7 @@ export default function ReportDetailPage() {
               </InfoRow>
 
               <InfoRow icon={<Users size={15} />} label="Brigada">
-                <span className="text-green-700">{selectedBrigade}</span>
+                <span className="text-green-400">{selectedBrigade}</span>
               </InfoRow>
 
               <InfoRow icon={<Clock size={15} />} label="Tiempo transcurrido">
@@ -425,8 +588,8 @@ export default function ReportDetailPage() {
             </div>
 
             {/* Timeline card */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-              <h2 className="text-sm font-semibold text-slate-800 mb-4">Linea de Tiempo</h2>
+            <div className="bg-[#0F1A2E] rounded-2xl border border-white/10 p-5 shadow-sm">
+              <h2 className="text-sm font-semibold text-slate-100 mb-4">Linea de Tiempo</h2>
 
               <ol className="relative" aria-label="Historial de estado">
                 {MOCK_TIMELINE.map((entry, idx) => {
@@ -450,7 +613,7 @@ export default function ReportDetailPage() {
 
                       {/* Content */}
                       <div className="pb-1">
-                        <p className="text-xs font-semibold text-slate-800">{entry.label}</p>
+                        <p className="text-xs font-semibold text-slate-100">{entry.label}</p>
                         <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
                           {entry.date}
                         </p>

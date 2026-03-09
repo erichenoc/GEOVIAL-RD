@@ -142,20 +142,21 @@ const PRICING = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-[#061020] text-white">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#061020]/80 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-[#4A90D9] to-[#D4A017]">
                 <MapPin className="h-4 w-4 text-white" />
               </div>
               <span className="text-lg font-bold tracking-tight">
-                GEO<span className="text-green-500">VIAL</span>
+                GEO<span className="text-[#D4A017]">VIAL</span>
               </span>
               <span className="hidden text-xs text-slate-500 sm:inline">RD</span>
+              <span className="hidden text-[10px] text-slate-600 italic sm:inline">Infraestructura Inteligente en Accion</span>
             </div>
 
             {/* Desktop Nav */}
@@ -184,7 +185,7 @@ export default function LandingPage() {
               </Link>
               <a
                 href="#contacto"
-                className="rounded-lg bg-green-500 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/25"
+                className="rounded-lg bg-gradient-to-r from-[#FF6B35] to-[#F59E0B] px-4 py-2 text-sm font-semibold text-white transition-all hover:shadow-lg hover:shadow-[#FF6B35]/25"
               >
                 Solicitar Demo
               </a>
@@ -232,12 +233,12 @@ export default function LandingPage() {
       <section id="solucion" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
-            <span className="mb-4 inline-block rounded-full border border-green-500/30 bg-green-500/10 px-4 py-1.5 text-sm font-medium text-green-400">
+            <span className="mb-4 inline-block rounded-full border border-[#4A90D9]/30 bg-[#4A90D9]/10 px-4 py-1.5 text-sm font-medium text-[#4A90D9]">
               La Solucion
             </span>
             <h2 className="text-3xl font-bold text-white sm:text-4xl">
               Todo lo que tu municipio necesita,{' '}
-              <span className="text-green-400">en un solo lugar</span>
+              <span className="text-[#4A90D9]">en un solo lugar</span>
             </h2>
             <p className="mt-4 text-lg text-slate-400">
               GEOVIAL RD digitaliza cada etapa del proceso vial, desde el reporte hasta la resolucion.
@@ -250,11 +251,11 @@ export default function LandingPage() {
               return (
                 <div
                   key={index}
-                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm transition-all duration-300 hover:border-green-500/30 hover:bg-white/8"
+                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm transition-all duration-300 hover:border-[#4A90D9]/30 hover:bg-white/8"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#4A90D9]/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="relative">
-                    <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-green-500/10 text-green-400 transition-all duration-300 group-hover:bg-green-500/20 group-hover:text-green-300">
+                    <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#4A90D9]/10 text-[#4A90D9] transition-all duration-300 group-hover:bg-[#4A90D9]/20 group-hover:text-[#4A90D9]">
                       <Icon className="h-6 w-6" />
                     </div>
                     <h3 className="mb-3 text-lg font-semibold text-white">{feature.title}</h3>
@@ -271,12 +272,12 @@ export default function LandingPage() {
       <section id="como-funciona" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
-            <span className="mb-4 inline-block rounded-full border border-green-500/30 bg-green-500/10 px-4 py-1.5 text-sm font-medium text-green-400">
+            <span className="mb-4 inline-block rounded-full border border-[#4A90D9]/30 bg-[#4A90D9]/10 px-4 py-1.5 text-sm font-medium text-[#4A90D9]">
               Proceso Simple
             </span>
             <h2 className="text-3xl font-bold text-white sm:text-4xl">
               Funcionando en{' '}
-              <span className="text-green-400">4 pasos</span>
+              <span className="text-[#4A90D9]">4 pasos</span>
             </h2>
             <p className="mt-4 text-lg text-slate-400">
               Desde la deteccion del dano hasta su resolucion, todo conectado en tiempo real.
@@ -285,15 +286,15 @@ export default function LandingPage() {
 
           <div className="relative">
             {/* Connector line - desktop only */}
-            <div className="absolute left-0 right-0 top-[60px] hidden h-px bg-gradient-to-r from-transparent via-green-500/30 to-transparent lg:block" />
+            <div className="absolute left-0 right-0 top-[60px] hidden h-px bg-gradient-to-r from-transparent via-[#4A90D9]/30 to-transparent lg:block" />
 
             <div className="grid gap-8 lg:grid-cols-4">
               {STEPS.map((step, index) => (
                 <div key={index} className="relative flex flex-col items-center text-center">
-                  <div className="relative mb-6 flex h-[72px] w-[72px] items-center justify-center rounded-full border-2 border-green-500/50 bg-slate-950 text-2xl font-bold text-green-400 shadow-lg shadow-green-500/20">
+                  <div className="relative mb-6 flex h-[72px] w-[72px] items-center justify-center rounded-full border-2 border-[#4A90D9]/50 bg-[#061020] text-2xl font-bold text-[#4A90D9] shadow-lg shadow-[#4A90D9]/20">
                     {step.number}
                     {index < STEPS.length - 1 && (
-                      <div className="absolute -right-4 top-1/2 -translate-y-1/2 text-green-500/40 lg:block">
+                      <div className="absolute -right-4 top-1/2 -translate-y-1/2 text-[#4A90D9]/40 lg:block">
                         <ArrowRight className="h-5 w-5" />
                       </div>
                     )}
@@ -311,12 +312,12 @@ export default function LandingPage() {
       <section id="precios" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
-            <span className="mb-4 inline-block rounded-full border border-green-500/30 bg-green-500/10 px-4 py-1.5 text-sm font-medium text-green-400">
+            <span className="mb-4 inline-block rounded-full border border-[#4A90D9]/30 bg-[#4A90D9]/10 px-4 py-1.5 text-sm font-medium text-[#4A90D9]">
               Precios Transparentes
             </span>
             <h2 className="text-3xl font-bold text-white sm:text-4xl">
               Un plan para cada{' '}
-              <span className="text-green-400">municipio</span>
+              <span className="text-[#4A90D9]">municipio</span>
             </h2>
             <p className="mt-4 text-lg text-slate-400">
               Sin cargos ocultos. Sin contratos de largo plazo. Cancela cuando quieras.
@@ -330,13 +331,13 @@ export default function LandingPage() {
                 className={cn(
                   'relative flex flex-col rounded-2xl border p-8 transition-all duration-300',
                   plan.highlight
-                    ? 'border-green-500/50 bg-green-500/5 shadow-xl shadow-green-500/10'
+                    ? 'border-[#FF6B35]/50 bg-[#FF6B35]/5 shadow-xl shadow-[#FF6B35]/10'
                     : 'border-white/10 bg-white/5 hover:border-white/20'
                 )}
               >
                 {plan.highlight && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="rounded-full bg-green-500 px-4 py-1 text-xs font-bold text-white shadow-lg">
+                    <span className="rounded-full bg-gradient-to-r from-[#FF6B35] to-[#F59E0B] px-4 py-1 text-xs font-bold text-white shadow-lg">
                       MAS POPULAR
                     </span>
                   </div>
@@ -345,7 +346,7 @@ export default function LandingPage() {
                 <div className="mb-8">
                   <h3 className="mb-2 text-xl font-bold text-white">{plan.name}</h3>
                   <div className="mb-3 flex items-baseline gap-1">
-                    <span className={cn('text-4xl font-bold', plan.highlight ? 'text-green-400' : 'text-white')}>
+                    <span className={cn('text-4xl font-bold', plan.highlight ? 'text-[#FF6B35]' : 'text-white')}>
                       {plan.price}
                     </span>
                     {plan.period && (
@@ -358,7 +359,7 @@ export default function LandingPage() {
                 <ul className="mb-8 flex-1 space-y-3">
                   {plan.features.map((feature, fi) => (
                     <li key={fi} className="flex items-start gap-3">
-                      <CheckCircle2 className={cn('mt-0.5 h-4 w-4 shrink-0', plan.highlight ? 'text-green-400' : 'text-slate-500')} />
+                      <CheckCircle2 className={cn('mt-0.5 h-4 w-4 shrink-0', plan.highlight ? 'text-[#4A90D9]' : 'text-slate-500')} />
                       <span className="text-sm text-slate-300">{feature}</span>
                     </li>
                   ))}
@@ -369,7 +370,7 @@ export default function LandingPage() {
                   className={cn(
                     'rounded-xl px-6 py-3 text-center text-sm font-semibold transition-all duration-200',
                     plan.highlight
-                      ? 'bg-green-500 text-white hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/25'
+                      ? 'bg-gradient-to-r from-[#FF6B35] to-[#F59E0B] text-white hover:shadow-lg hover:shadow-[#FF6B35]/25'
                       : 'border border-white/10 bg-white/5 text-white hover:border-white/20 hover:bg-white/10'
                   )}
                 >
@@ -384,11 +385,11 @@ export default function LandingPage() {
       {/* CTA / Contact Section */}
       <section id="contacto" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="overflow-hidden rounded-3xl border border-green-500/20 bg-gradient-to-br from-green-500/10 via-slate-900 to-slate-950 p-12">
+          <div className="overflow-hidden rounded-3xl border border-[#4A90D9]/20 bg-gradient-to-br from-[#4A90D9]/10 via-slate-900 to-[#061020] p-12">
             <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
               {/* Left: Copy */}
               <div>
-                <span className="mb-4 inline-block rounded-full border border-green-500/30 bg-green-500/10 px-4 py-1.5 text-sm font-medium text-green-400">
+                <span className="mb-4 inline-block rounded-full border border-[#4A90D9]/30 bg-[#4A90D9]/10 px-4 py-1.5 text-sm font-medium text-[#4A90D9]">
                   Comienza Hoy
                 </span>
                 <h2 className="mb-6 text-3xl font-bold text-white sm:text-4xl">
@@ -406,7 +407,7 @@ export default function LandingPage() {
                     'Soporte tecnico en espanol',
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <CheckCircle2 className="h-5 w-5 shrink-0 text-green-400" />
+                      <CheckCircle2 className="h-5 w-5 shrink-0 text-[#4A90D9]" />
                       <span className="text-slate-300">{item}</span>
                     </div>
                   ))}
@@ -427,11 +428,11 @@ export default function LandingPage() {
             {/* Brand */}
             <div className="md:col-span-2">
               <div className="mb-4 flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-[#4A90D9] to-[#D4A017]">
                   <MapPin className="h-4 w-4 text-white" />
                 </div>
                 <span className="text-lg font-bold">
-                  GEO<span className="text-green-500">VIAL</span>{' '}
+                  GEO<span className="text-[#D4A017]">VIAL</span>{' '}
                   <span className="text-slate-400">RD</span>
                 </span>
               </div>

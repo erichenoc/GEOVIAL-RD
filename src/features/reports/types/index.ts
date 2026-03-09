@@ -20,6 +20,7 @@ export interface MockReport {
   reported_at: string
   brigade_name: string | null
   photo_color: string
+  photo_url: string
 }
 
 export interface MockComment {

@@ -16,11 +16,11 @@ export function PageHeader({ title, description, action, className }: PageHeader
       )}
     >
       <div className="min-w-0">
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight truncate">
+        <h1 className="text-2xl font-bold text-white tracking-tight truncate">
           {title}
         </h1>
         {description && (
-          <p className="mt-1 text-sm text-slate-500 leading-relaxed">
+          <p className="mt-1 text-sm text-slate-400 leading-relaxed">
             {description}
           </p>
         )}

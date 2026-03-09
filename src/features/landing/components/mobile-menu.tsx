@@ -26,7 +26,7 @@ export function MobileMenu() {
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 top-16 z-50 border-b border-white/10 bg-slate-950/95 px-4 py-6 backdrop-blur-xl">
+        <div className="absolute left-0 right-0 top-16 z-50 border-b border-white/10 bg-[#061020]/95 px-4 py-6 backdrop-blur-xl">
           <nav className="flex flex-col gap-1">
             {NAV_LINKS.map((link) => (
               <a
@@ -49,7 +49,7 @@ export function MobileMenu() {
               <a
                 href="#contacto"
                 onClick={() => setOpen(false)}
-                className="rounded-lg bg-green-500 px-4 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-green-400"
+                className="rounded-lg bg-gradient-to-r from-[#FF6B35] to-[#F59E0B] px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:shadow-lg hover:shadow-[#FF6B35]/25"
               >
                 Solicitar Demo
               </a>

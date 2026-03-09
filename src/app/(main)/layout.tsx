@@ -19,7 +19,7 @@ export default function MainLayout({
   const { role } = useDemoStore()
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden">
+    <div className="flex h-screen bg-[#0B1A30] overflow-hidden">
       {/* Desktop Sidebar */}
       <Sidebar
         role={role}
@@ -37,11 +37,10 @@ export default function MainLayout({
           userName={DEMO_USER.userName}
           userEmail={DEMO_USER.userEmail}
           orgName={DEMO_USER.orgName}
-          notificationCount={4}
         />
 
         {/* Page content */}
-        <main className="flex-1 overflow-auto p-6 bg-slate-50">
+        <main className="flex-1 overflow-auto p-6 bg-[#0B1A30] bg-grid-pattern-dark">
           {children}
         </main>
       </div>

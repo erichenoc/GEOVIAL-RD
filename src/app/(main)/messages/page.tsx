@@ -225,8 +225,8 @@ function ChannelItem({
       className={cn(
         'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all',
         isActive
-          ? 'bg-green-50 border-l-2 border-green-500 rounded-l-none pl-2.5'
-          : 'hover:bg-slate-100'
+          ? 'bg-[#4A90D9]/10 border-l-2 border-[#4A90D9] rounded-l-none pl-2.5'
+          : 'hover:bg-white/5'
       )}
       aria-current={isActive ? 'page' : undefined}
     >
@@ -234,7 +234,7 @@ function ChannelItem({
         <div
           className={cn(
             'flex items-center justify-center w-8 h-8 rounded-lg shrink-0',
-            isActive ? 'bg-green-100 text-green-700' : 'bg-slate-200 text-slate-500'
+            isActive ? 'bg-[#4A90D9]/15 text-[#4A90D9]' : 'bg-white/10 text-slate-400'
           )}
         >
           <Hash size={14} />
@@ -244,13 +244,13 @@ function ChannelItem({
           <div
             className={cn(
               'flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold',
-              isActive ? 'bg-green-600 text-white' : 'bg-slate-300 text-slate-600'
+              isActive ? 'bg-[#4A90D9] text-white' : 'bg-white/10 text-slate-300'
             )}
           >
             {channel.avatarInitials}
           </div>
           {channel.online && (
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white" />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-[#0F1A2E]" />
           )}
         </div>
       )}
@@ -260,7 +260,7 @@ function ChannelItem({
           <span
             className={cn(
               'text-sm font-medium truncate',
-              isActive ? 'text-green-700' : 'text-slate-700'
+              isActive ? 'text-[#4A90D9]' : 'text-slate-200'
             )}
           >
             {channel.name}
@@ -271,7 +271,7 @@ function ChannelItem({
       </div>
 
       {channel.unread > 0 && (
-        <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-green-600 text-white text-[10px] font-bold shrink-0">
+        <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-[#D4A017] text-white text-[10px] font-bold shrink-0">
           {channel.unread}
         </span>
       )}
@@ -283,7 +283,7 @@ function MessageBubble({ message }: { message: Message }) {
   if (message.type === 'system') {
     return (
       <div className="flex justify-center py-2">
-        <span className="text-[11px] text-slate-400 bg-slate-100 px-3 py-1 rounded-full">
+        <span className="text-[11px] text-slate-400 bg-white/10 px-3 py-1 rounded-full">
           {message.content}
         </span>
       </div>
@@ -295,7 +295,7 @@ function MessageBubble({ message }: { message: Message }) {
       <div className="flex flex-col items-end gap-1">
         <div className="flex items-end gap-2 max-w-[75%]">
           {message.type === 'voice' ? (
-            <div className="flex items-center gap-2.5 bg-green-600 text-white px-4 py-2.5 rounded-2xl rounded-br-sm">
+            <div className="flex items-center gap-2.5 bg-[#4A90D9] text-white px-4 py-2.5 rounded-2xl rounded-br-sm">
               <button
                 aria-label="Reproducir mensaje de voz"
                 className="flex items-center justify-center w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
@@ -314,7 +314,7 @@ function MessageBubble({ message }: { message: Message }) {
               <span className="text-xs opacity-80">{message.voiceDuration}</span>
             </div>
           ) : (
-            <div className="bg-green-600 text-white px-4 py-2.5 rounded-2xl rounded-br-sm">
+            <div className="bg-[#4A90D9] text-white px-4 py-2.5 rounded-2xl rounded-br-sm">
               <p className="text-sm leading-relaxed">{message.content}</p>
             </div>
           )}
@@ -328,7 +328,7 @@ function MessageBubble({ message }: { message: Message }) {
     <div className="flex flex-col items-start gap-1">
       <div className="flex items-end gap-2 max-w-[75%]">
         <div
-          className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-300 text-slate-600 text-xs font-bold shrink-0 mb-1"
+          className="flex items-center justify-center w-7 h-7 rounded-full bg-white/10 text-slate-300 text-xs font-bold shrink-0 mb-1"
           aria-hidden="true"
         >
           {message.senderInitials}
@@ -337,27 +337,27 @@ function MessageBubble({ message }: { message: Message }) {
         <div>
           <p className="text-[10px] text-slate-400 mb-1 ml-1">{message.senderName}</p>
           {message.type === 'voice' ? (
-            <div className="flex items-center gap-2.5 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-sm">
+            <div className="flex items-center gap-2.5 bg-white/10 border border-white/10 px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-lg shadow-black/10">
               <button
                 aria-label="Reproducir mensaje de voz"
-                className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors"
+                className="flex items-center justify-center w-7 h-7 rounded-full bg-[#4A90D9]/10 hover:bg-[#4A90D9]/20 transition-colors"
               >
-                <span className="text-xs text-slate-600">▶</span>
+                <span className="text-xs text-[#4A90D9]">▶</span>
               </button>
               <div className="flex items-center gap-0.5">
                 {Array.from({ length: 20 }).map((_, i) => (
                   <div
                     key={i}
-                    className="w-0.5 bg-slate-300 rounded-full"
+                    className="w-0.5 bg-[#4A90D9]/40 rounded-full"
                     style={{ height: `${4 + Math.sin(i * 0.8) * 8 + 4}px` }}
                   />
                 ))}
               </div>
-              <span className="text-xs text-slate-500">{message.voiceDuration}</span>
+              <span className="text-xs text-slate-400">{message.voiceDuration}</span>
             </div>
           ) : (
-            <div className="bg-white border border-slate-200 px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-sm">
-              <p className="text-sm text-slate-800 leading-relaxed">{message.content}</p>
+            <div className="bg-white/10 border border-white/10 px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-lg shadow-black/10">
+              <p className="text-sm text-slate-100 leading-relaxed">{message.content}</p>
             </div>
           )}
         </div>
@@ -415,15 +415,15 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-56px)] -m-6 bg-white overflow-hidden">
+    <div className="flex h-[calc(100vh-56px)] -m-6 bg-[#0F1A2E] overflow-hidden">
 
       {/* ── LEFT PANEL: Contacts ── */}
       <aside
-        className="hidden md:flex flex-col w-72 bg-white border-r border-slate-200 shrink-0"
+        className="hidden md:flex flex-col w-72 bg-[#0F1A2E] border-r border-white/10 shrink-0"
         aria-label="Lista de conversaciones"
       >
         {/* Search */}
-        <div className="p-3 border-b border-slate-100">
+        <div className="p-3 border-b border-white/5">
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -432,13 +432,13 @@ export default function MessagesPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               aria-label="Buscar conversaciones"
-              className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder:text-slate-400 text-slate-800"
+              className="w-full pl-9 pr-3 py-2 text-sm bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4A90D9] focus:border-transparent placeholder:text-slate-500 text-white"
             />
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-slate-100 px-3 pt-2">
+        <div className="flex border-b border-white/5 px-3 pt-2">
           {(['canales', 'directos'] as const).map((tab) => (
             <button
               key={tab}
@@ -446,8 +446,8 @@ export default function MessagesPage() {
               className={cn(
                 'flex-1 pb-2 text-xs font-semibold capitalize transition-colors border-b-2',
                 activeTab === tab
-                  ? 'text-green-600 border-green-500'
-                  : 'text-slate-400 border-transparent hover:text-slate-600'
+                  ? 'text-[#4A90D9] border-[#4A90D9]'
+                  : 'text-slate-400 border-transparent hover:text-slate-300'
               )}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -492,12 +492,12 @@ export default function MessagesPage() {
       </aside>
 
       {/* ── CENTER PANEL: Chat ── */}
-      <main className="flex flex-col flex-1 min-w-0 bg-slate-50">
+      <main className="flex flex-col flex-1 min-w-0 bg-white/5">
 
         {/* Chat header */}
-        <header className="flex items-center justify-between px-4 py-3 bg-white border-b border-slate-200 shrink-0">
+        <header className="flex items-center justify-between px-4 py-3 bg-[#0F1A2E] border-b border-white/10 shrink-0">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-green-100 text-green-700 shrink-0">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-[#4A90D9]/15 text-[#4A90D9] shrink-0">
               {activeChannel.type === 'channel' ? (
                 <Hash size={16} />
               ) : (
@@ -505,7 +505,7 @@ export default function MessagesPage() {
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-slate-900 truncate">
+              <p className="text-sm font-semibold text-white truncate">
                 {activeChannel.name}
               </p>
               <p className="text-xs text-slate-400">
@@ -524,19 +524,19 @@ export default function MessagesPage() {
           <div className="flex items-center gap-1">
             <button
               aria-label="Llamada de voz"
-              className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-300 hover:bg-white/10 transition-colors"
             >
               <Phone size={16} />
             </button>
             <button
               aria-label="Videollamada"
-              className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-300 hover:bg-white/10 transition-colors"
             >
               <Video size={16} />
             </button>
             <button
               aria-label="Mas opciones"
-              className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-300 hover:bg-white/10 transition-colors"
             >
               <MoreVertical size={16} />
             </button>
@@ -557,11 +557,11 @@ export default function MessagesPage() {
         </div>
 
         {/* Input area */}
-        <div className="bg-white border-t border-slate-200 px-4 py-3 shrink-0">
+        <div className="bg-[#0F1A2E] border-t border-white/10 px-4 py-3 shrink-0">
           <div className="flex items-center gap-2">
             <button
               aria-label="Grabar nota de voz"
-              className="flex items-center justify-center w-10 h-10 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors shrink-0"
+              className="flex items-center justify-center w-10 h-10 rounded-xl text-slate-400 hover:text-[#4A90D9] hover:bg-[#4A90D9]/10 transition-colors shrink-0"
             >
               <Mic size={18} />
             </button>
@@ -573,7 +573,7 @@ export default function MessagesPage() {
               onKeyDown={handleKeyDown}
               placeholder="Escribe un mensaje..."
               aria-label="Escribe un mensaje"
-              className="flex-1 px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder:text-slate-400 text-slate-800"
+              className="flex-1 px-4 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4A90D9] focus:border-transparent placeholder:text-slate-500 text-white"
             />
 
             <button
@@ -583,8 +583,8 @@ export default function MessagesPage() {
               className={cn(
                 'flex items-center justify-center w-10 h-10 rounded-xl transition-all shrink-0',
                 inputMessage.trim()
-                  ? 'bg-green-600 hover:bg-green-700 text-white shadow-sm shadow-green-200'
-                  : 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                  ? 'bg-gradient-to-r from-[#4A90D9] to-[#1B3A6B] hover:opacity-90 text-white shadow-sm shadow-[#4A90D9]/30'
+                  : 'bg-white/10 text-slate-400 cursor-not-allowed'
               )}
             >
               <Send size={16} />
@@ -595,11 +595,11 @@ export default function MessagesPage() {
 
       {/* ── RIGHT PANEL: Info (hidden on mobile/tablet) ── */}
       <aside
-        className="hidden xl:flex flex-col w-64 bg-white border-l border-slate-200 shrink-0"
+        className="hidden xl:flex flex-col w-64 bg-[#0F1A2E] border-l border-white/10 shrink-0"
         aria-label="Informacion del canal"
       >
-        <div className="p-4 border-b border-slate-100">
-          <h2 className="text-sm font-semibold text-slate-800">
+        <div className="p-4 border-b border-white/5">
+          <h2 className="text-sm font-semibold text-slate-100">
             {activeChannel.type === 'channel' ? 'Acerca del Canal' : 'Perfil'}
           </h2>
         </div>
@@ -607,19 +607,19 @@ export default function MessagesPage() {
         <div className="p-4 space-y-4">
           {/* Channel / person avatar */}
           <div className="flex flex-col items-center gap-2 py-2">
-            <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-green-100 text-green-700">
+            <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-[#4A90D9]/15 text-[#4A90D9]">
               {activeChannel.type === 'channel' ? (
                 <Hash size={28} />
               ) : (
                 <span className="text-xl font-bold">{activeChannel.avatarInitials}</span>
               )}
             </div>
-            <p className="text-sm font-semibold text-slate-800">{activeChannel.name}</p>
+            <p className="text-sm font-semibold text-slate-100">{activeChannel.name}</p>
             {activeChannel.type === 'channel' && (
               <p className="text-xs text-slate-400">{activeChannel.memberCount} miembros</p>
             )}
             {activeChannel.type === 'direct' && activeChannel.online && (
-              <span className="inline-flex items-center gap-1.5 text-xs text-green-600">
+              <span className="inline-flex items-center gap-1.5 text-xs text-[#4A90D9]">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
                 En linea
               </span>
@@ -629,14 +629,14 @@ export default function MessagesPage() {
           {/* Quick stats */}
           {activeChannel.type === 'channel' && (
             <div className="grid grid-cols-2 gap-2">
-              <div className="bg-slate-50 rounded-xl p-3 text-center">
-                <p className="text-lg font-bold text-slate-900">
+              <div className="bg-white/5 rounded-xl p-3 text-center">
+                <p className="text-lg font-bold text-white">
                   {activeChannel.memberCount}
                 </p>
                 <p className="text-[10px] text-slate-400">Miembros</p>
               </div>
-              <div className="bg-slate-50 rounded-xl p-3 text-center">
-                <p className="text-lg font-bold text-slate-900">127</p>
+              <div className="bg-white/5 rounded-xl p-3 text-center">
+                <p className="text-lg font-bold text-white">127</p>
                 <p className="text-[10px] text-slate-400">Mensajes</p>
               </div>
             </div>
@@ -645,16 +645,16 @@ export default function MessagesPage() {
           {/* Members preview (channels only) */}
           {activeChannel.type === 'channel' && (
             <div>
-              <p className="text-xs font-semibold text-slate-500 mb-2">Miembros recientes</p>
+              <p className="text-xs font-semibold text-slate-400 mb-2">Miembros recientes</p>
               <div className="space-y-2">
                 {['Carlos Martinez', 'Ana Rosario', 'Miguel Torres'].map((name) => {
                   const initials = name.split(' ').map((n) => n[0]).join('')
                   return (
                     <div key={name} className="flex items-center gap-2.5">
-                      <div className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-200 text-slate-600 text-xs font-bold shrink-0">
+                      <div className="flex items-center justify-center w-7 h-7 rounded-full bg-white/10 text-slate-300 text-xs font-bold shrink-0">
                         {initials}
                       </div>
-                      <span className="text-xs text-slate-700 truncate">{name}</span>
+                      <span className="text-xs text-slate-200 truncate">{name}</span>
                       <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0 ml-auto" />
                     </div>
                   )

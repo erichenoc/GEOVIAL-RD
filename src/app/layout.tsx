@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'GEOVIAL RD - Gestion Vial Inteligente',
+  title: 'GEOVIAL RD - Infraestructura Inteligente en Acción',
   description:
-    'Sistema de gestion de danos viales para municipios de Republica Dominicana. Reporta, asigna y monitorea el mantenimiento de calles en tiempo real.',
-  keywords: 'gestion vial, municipios, republica dominicana, infraestructura, carreteras',
+    'Sistema de monitoreo y gestión de infraestructura vial para municipios de República Dominicana. Reporta, asigna y monitorea el mantenimiento de calles en tiempo real.',
+  keywords: 'gestion vial, municipios, republica dominicana, infraestructura, carreteras, obras publicas',
 }
 
 export default function RootLayout({

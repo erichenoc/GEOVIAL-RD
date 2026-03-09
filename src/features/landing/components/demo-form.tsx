@@ -35,9 +35,9 @@ export function DemoForm() {
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-green-500/20 bg-white/5 p-10 text-center backdrop-blur-sm">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20">
-          <CheckCircle2 className="h-8 w-8 text-green-400" />
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-[#4A90D9]/20 bg-white/5 p-10 text-center backdrop-blur-sm">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#22C55E]/20">
+          <CheckCircle2 className="h-8 w-8 text-[#22C55E]" />
         </div>
         <h3 className="mb-2 text-xl font-bold text-white">Solicitud Recibida</h3>
         <p className="text-slate-400">
@@ -93,7 +93,7 @@ export function DemoForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-500 py-3.5 text-sm font-semibold text-white transition-all hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/25 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6B35] to-[#F59E0B] py-3.5 text-sm font-semibold text-white transition-all hover:shadow-lg hover:shadow-[#FF6B35]/25 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? (
             <>
@@ -134,6 +134,6 @@ function inputClass(hasError: boolean) {
     'w-full rounded-lg border bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 backdrop-blur-sm transition-all duration-200 outline-none',
     hasError
       ? 'border-red-500/50 focus:border-red-400 focus:ring-1 focus:ring-red-400/30'
-      : 'border-white/10 focus:border-green-500/50 focus:ring-1 focus:ring-green-500/20'
+      : 'border-white/10 focus:border-[#4A90D9]/50 focus:ring-1 focus:ring-[#4A90D9]/20'
   )
 }
